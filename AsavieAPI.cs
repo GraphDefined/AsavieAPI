@@ -177,6 +177,24 @@ namespace com.GraphDefined.Asavie.API
 
             #endregion
 
+            #region APIResult(ErrorDescription, Exception = null)
+
+            public APIResult(String     ErrorDescription,
+                             Exception  Exception = null)
+
+                : this(false,
+                       0,
+                       0,
+                       0,
+                       ErrorDescription,
+                       Exception?.Message ?? "",
+                       "",
+                       "")
+
+            { }
+
+            #endregion
+
             #endregion
 
 
@@ -189,6 +207,8 @@ namespace com.GraphDefined.Asavie.API
 
                 try
                 {
+
+                    #region Documentation
 
                     // HTTP/1.1 200 OK
                     // Cache-Control:    no-cache
@@ -210,6 +230,10 @@ namespace com.GraphDefined.Asavie.API
                     //   "StatusUrl":          null,
                     //   "ContinuationToken":  ""
                     // }
+
+                    #endregion
+
+                    #region Parse JSON
 
                     if (!JSONObj.ParseMandatory("Success",
                                                 "Success",
@@ -278,6 +302,8 @@ namespace com.GraphDefined.Asavie.API
                         throw new Exception(ErrorResponse);
                     }
 
+                    #endregion
+
                     Result = new APIResult<T>(Data.Value,
                                               Success,
                                               Code,
@@ -293,18 +319,8 @@ namespace com.GraphDefined.Asavie.API
                 }
                 catch (Exception e)
                 {
-
-                    Result = new APIResult<T>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              e.Message,
-                                              "",
-                                              "",
-                                              "");
-
+                    Result = new APIResult<T>("Could not parse HTTP response!", e);
                     return false;
-
                 }
 
             }
@@ -327,32 +343,15 @@ namespace com.GraphDefined.Asavie.API
                         return true;
                     }
 
-                    Result = new APIResult<T>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              "",
-                                              "",
-                                              "",
-                                              "");
+                    Result = new APIResult<T>("Could not parse HTTP response!");
 
                     return false;
 
                 }
                 catch (Exception e)
                 {
-
-                    Result = new APIResult<T>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              e.Message,
-                                              "",
-                                              "",
-                                              "");
-
+                    Result = new APIResult<T>("Could not parse HTTP response!", e);
                     return false;
-
                 }
 
             }
@@ -662,6 +661,8 @@ namespace com.GraphDefined.Asavie.API
                 if (httpresponse.HTTPStatusCode == HTTPStatusCode.OK)
                 {
 
+                    #region Documentation
+
                     // HTTP/1.1 200 OK
                     // Cache-Control:    no-cache
                     // Pragma:           no-cache
@@ -683,11 +684,12 @@ namespace com.GraphDefined.Asavie.API
                     //   "ContinuationToken":  ""
                     // }
 
+                    #endregion
+
                     try
                     {
 
                         if (APIResult<Version>.TryParse(httpresponse,
-                                                        //APIVersion,
                                                         out APIResult<Version> Result,
                                                         JSONObj => {
 
@@ -708,57 +710,25 @@ namespace com.GraphDefined.Asavie.API
                             return Result;
                         }
 
-                        return new APIResult<Version>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie NewAuthToken response JSON could not be parsed!",
-                                                      "",
-                                                      "",
-                                                      "");
+                        return new APIResult<Version>("HTTP JSON response could not be parsed!");
 
                     }
                     catch (Exception e)
                     {
-
-                        return new APIResult<Version>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie NewAuthToken response JSON could not be parsed: " + e.Message,
-                                                      "",
-                                                      "",
-                                                      "");
-
+                        return new APIResult<Version>("HTTP JSON response could not be parsed!", e);
                     }
 
                 }
 
                 #endregion
 
-                return new APIResult<Version>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              httpresponse.HTTPStatusCode.ToString(),
-                                              "",
-                                              "",
-                                              "");
+                return new APIResult<Version>(httpresponse.HTTPStatusCode.ToString());
 
             }
 
             catch (Exception e)
             {
-
-                return new APIResult<Version>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              e.Message,
-                                              "",
-                                              "",
-                                              "");
-
+                return new APIResult<Version>("HTTP JSON response could not be parsed!", e);
             }
 
         }
@@ -843,7 +813,6 @@ namespace com.GraphDefined.Asavie.API
                     {
 
                         if (APIResult<JObject>.TryParse(httpresponse,
-                                                        //APIJObject,
                                                         out APIResult<JObject> Result,
                                                         JSONObj => {
 
@@ -862,57 +831,25 @@ namespace com.GraphDefined.Asavie.API
                             return Result;
                         }
 
-                        return new APIResult<JObject>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie account information JSON could not be parsed!",
-                                                      "",
-                                                      "",
-                                                      "");
+                        return new APIResult<JObject>("HTTP JSON response could not be parsed!");
 
                     }
                     catch (Exception e)
                     {
-
-                        return new APIResult<JObject>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie account information JSON could not be parsed: " + e.Message,
-                                                      "",
-                                                      "",
-                                                      "");
-
+                        return new APIResult<JObject>("HTTP JSON response could not be parsed!", e);
                     }
 
                 }
 
                 #endregion
 
-                return new APIResult<JObject>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              httpresponse.HTTPStatusCode.ToString(),
-                                              "",
-                                              "",
-                                              "");
+                return new APIResult<JObject>(httpresponse.HTTPStatusCode.ToString());
 
             }
 
             catch (Exception e)
             {
-
-                return new APIResult<JObject>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              e.Message,
-                                              "",
-                                              "",
-                                              "");
-
+                return new APIResult<JObject>("HTTP JSON response could not be parsed!", e);
             }
 
         }
@@ -1756,7 +1693,173 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region GetLogs        (AccountName, ...)
+        #region GetClientSessions(AccountName, NetworkName, From = null, To = null, ...)
+
+        public async Task<APIResult<IEnumerable<JObject>>>
+
+            GetClientSessions(String              AccountName,
+                              String              NetworkName,
+                              DateTime?           From                = null,
+                              DateTime?           To                  = null,
+
+                              DateTime?           Timestamp           = null,
+                              CancellationToken?  CancellationToken   = null,
+                              EventTracking_Id    EventTrackingId     = null,
+                              TimeSpan?           RequestTimeout      = null)
+
+        {
+
+            AccountName = AccountName?.Trim();
+
+            if (AccountName.IsNullOrEmpty())
+                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
+
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+
+            var Filter = "";
+
+            if (From.HasValue)
+                Filter += "?from=" + From.Value.ToUniversalTime().ToString("dMMMyyyy HH:mm");
+
+            if (To.HasValue)
+                Filter += (Filter.Length > 0 ? "&" : "?") + "to=" + To.Value.ToUniversalTime().ToString("dMMMyyyy HH:mm");
+
+            try
+            {
+
+                #region Upstream HTTP request...
+
+                var httpresponse = await new HTTPSClient(Hostname,
+                                                         RemoteCertificateValidator,
+                                                         RemotePort:  HTTPPort,
+                                                         DNSClient:   DNSClient ?? this.DNSClient).
+
+                                           Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/networks/" + NetworkName + "/analytics/clientsessions" + Filter.Replace(" ", "%20")), //?from=01jul2016%2000:00&to=11jul2018%2000:00"),
+
+                                                                        requestbuilder => {
+                                                                            requestbuilder.Host           = VirtualHostname;
+                                                                            requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
+                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                        }),
+
+                                                   //RequestLogDelegate:   OnRemoteStartRequest,
+                                                   //ResponseLogDelegate:  OnRemoteStartResponse,
+                                                   CancellationToken:    CancellationToken,
+                                                   EventTrackingId:      EventTrackingId,
+                                                   RequestTimeout:       RequestTimeout ?? TimeSpan.FromSeconds(60)).
+
+                                           ConfigureAwait(false);
+
+                #endregion
+
+                #region HTTPStatusCode.OK
+
+                if (httpresponse.HTTPStatusCode == HTTPStatusCode.OK)
+                {
+
+                    #region Documentation
+
+                    // HTTP/1.1 200 OK
+                    // Cache-Control: no-cache
+                    // Pragma: no-cache
+                    // Transfer-Encoding: chunked
+                    // Content-Type: application/octet-stream
+                    // Expires: -1
+                    // Request-Context: appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                    // Date: Tue, 17 Jul 2018 15:59:01 GMT
+                    // 
+                    //  {
+                    //    "Data": [
+                    //      {
+                    //        "DeviceName":        "467190019369536",
+                    //        "CLI":               "(+46)07190019369536",
+                    //        "StartTime":         "2018-07-17 15:46:29Z",
+                    //        "EndTime":           "2018-07-17 15:46:30Z",
+                    //        "SessionEndCause":   "AccountingStop",
+                    //        "DataTx":            0,
+                    //        "DataRx":            0,
+                    //        "MCC":               "204",
+                    //        "MNC":               "16",
+                    //        "RestrictionCause":  "None",
+                    //        "RestrictionTime":   "0001-01-01 00:00:00Z",
+                    //        "DataAccessGroup":   "",
+                    //        "Zone":              ""
+                    //      },
+                    //      ...
+                    //    ],
+                    //    "Success":            true,
+                    //    "Code":               200,
+                    //    "ErrorCode":          0,
+                    //    "ErrorSubCode":       0,
+                    //    "ErrorDescription":   "",
+                    //    "Meta":               "",
+                    //    "StatusUrl":          null,
+                    //    "ContinuationToken":  null
+                    //  }
+
+                    #endregion
+
+                    try
+                    {
+
+                        if (APIResult<IEnumerable<JObject>>.TryParse(httpresponse,
+                                                                     out APIResult<IEnumerable<JObject>> Result,
+                                                                     JSONObj => {
+
+                                                                         if (!JSONObj.ParseMandatory("Data",
+                                                                                                     "account information",
+                                                                                                     out JArray  ArrayOfSIMs,
+                                                                                                     out String  ErrorResponse))
+                                                                         {
+                                                                             throw new Exception(ErrorResponse);
+                                                                         }
+
+                                                                         var ListOfSIMs = new List<JObject>();
+                                                                         JObject simInfo = null;
+
+                                                                         foreach (var json in ArrayOfSIMs)
+                                                                         {
+
+                                                                             simInfo = json as JObject;
+
+                                                                             if (simInfo != null)
+                                                                                 ListOfSIMs.Add(simInfo);
+
+                                                                         }
+
+                                                                         return ListOfSIMs;
+
+                                                                     }))
+                        {
+                            return Result;
+                        }
+
+                        return new APIResult<IEnumerable<JObject>>("HTTP JSON response could not be parsed!");
+
+                    }
+                    catch (Exception e)
+                    {
+                        return new APIResult<IEnumerable<JObject>>("HTTP JSON response could not be parsed!", e);
+                    }
+
+                }
+
+                #endregion
+
+                return new APIResult<IEnumerable<JObject>>(httpresponse.HTTPStatusCode.ToString());
+
+            }
+
+            catch (Exception e)
+            {
+                return new APIResult<IEnumerable<JObject>>("HTTP JSON response could not be parsed!", e);
+            }
+
+        }
+
+        #endregion
+
+        #region GetLogs          (AccountName, ...)
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
@@ -1809,6 +1912,8 @@ namespace com.GraphDefined.Asavie.API
                 if (httpresponse.HTTPStatusCode == HTTPStatusCode.OK)
                 {
 
+                    #region Documentation
+
                     // HTTP/1.1 200 OK
                     // Cache-Control:    no-cache
                     // Pragma:           no-cache
@@ -1829,6 +1934,8 @@ namespace com.GraphDefined.Asavie.API
                     //   "StatusUrl":          null,
                     //   "ContinuationToken":  ""
                     // }
+
+                    #endregion
 
                     try
                     {
@@ -1865,63 +1972,30 @@ namespace com.GraphDefined.Asavie.API
                             return Result;
                         }
 
-                        return new APIResult<IEnumerable<JObject>>(false,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   "Asavie account information JSON could not be parsed!",
-                                                                   "",
-                                                                   "",
-                                                                   "");
+                        return new APIResult<IEnumerable<JObject>>("HTTP JSON response could not be parsed!");
 
                     }
                     catch (Exception e)
                     {
-
-                        return new APIResult<IEnumerable<JObject>>(false,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   "Asavie account information JSON could not be parsed: " + e.Message,
-                                                                   "",
-                                                                   "",
-                                                                   "");
-
+                        return new APIResult<IEnumerable<JObject>>("HTTP JSON response could not be parsed!", e);
                     }
 
                 }
 
                 #endregion
 
-                return new APIResult<IEnumerable<JObject>>(false,
-                                                           0,
-                                                           0,
-                                                           0,
-                                                           httpresponse.HTTPStatusCode.ToString(),
-                                                           "",
-                                                           "",
-                                                           "");
+                return new APIResult<IEnumerable<JObject>>(httpresponse.HTTPStatusCode.ToString());
 
             }
 
             catch (Exception e)
             {
-
-                return new APIResult<IEnumerable<JObject>>(false,
-                                                           0,
-                                                           0,
-                                                           0,
-                                                           e.Message,
-                                                           "",
-                                                           "",
-                                                           "");
-
+                return new APIResult<IEnumerable<JObject>>("HTTP JSON response could not be parsed!", e);
             }
 
         }
 
         #endregion
-
 
     }
 
