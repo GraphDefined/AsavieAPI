@@ -16,14 +16,14 @@ namespace com.GraphDefined.Asavie.API
 
     public enum SimCardStateValues
     {
-        notactivated = 0,
-        ready        = 1,
-        test         = 2,
-        live         = 3,
-        suspend      = 4,
-        bar          = 5,
-        unknown      = 6,
-        terminated   = 100
+        notactivated  = 0,
+        ready         = 1,
+        test          = 2,
+        live          = 3,
+        suspend       = 4,
+        bar           = 5,
+        unknown       = 6,
+        terminated    = 100
     }
 
 
