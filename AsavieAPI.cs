@@ -1086,17 +1086,17 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region GetHardwareSIMs    (AccountName, SIMId, ...)
+        #region GetHardwareSIM     (AccountName, SIMId, ...)
 
         public async Task<APIResult<JObject>>
 
-            GetHardwareSIMs(String                   AccountName,
-                            String                   SIMId,
+            GetHardwareSIM(String                   AccountName,
+                           String                   SIMId,
 
-                            DateTime?                Timestamp           = null,
-                            CancellationToken?       CancellationToken   = null,
-                            EventTracking_Id         EventTrackingId     = null,
-                            TimeSpan?                RequestTimeout      = null)
+                           DateTime?                Timestamp           = null,
+                           CancellationToken?       CancellationToken   = null,
+                           EventTracking_Id         EventTrackingId     = null,
+                           TimeSpan?                RequestTimeout      = null)
 
         {
 
