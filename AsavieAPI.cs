@@ -491,7 +491,7 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region NewAuthToken   (...)
+        #region NewAuthToken       (...)
 
         public async Task<AuthToken>
 
@@ -615,7 +615,7 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region GetAPIVersion  (...)
+        #region GetAPIVersion      (...)
 
         public async Task<APIResult<Version>>
 
@@ -735,7 +735,7 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region GetAccount     (AccountName, ...)
+        #region GetAccount         (AccountName, ...)
 
         public async Task<APIResult<JObject>>
 
@@ -1359,7 +1359,7 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region GetNetworks    (AccountName, ...)
+        #region GetNetworks        (AccountName, ...)
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
@@ -1525,7 +1525,7 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region GetDevicesAPNs (AccountName, NetworkName, ...)
+        #region GetDevicesAPNs     (AccountName, NetworkName, ...)
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
@@ -1693,7 +1693,7 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region GetClientSessions(AccountName, NetworkName, From = null, To = null, ...)
+        #region GetClientSessions  (AccountName, NetworkName, From = null, To = null, ...)
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
@@ -1859,7 +1859,7 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region GetLogs          (AccountName, ...)
+        #region GetLogs            (AccountName, ...)
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
