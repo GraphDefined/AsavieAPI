@@ -1,6 +1,6 @@
 ﻿/*
- * Copyright (c) 2010-2018, Achim 'ahzf' Friedland <achim.friedland@graphdefined.com>
- * This file is part of Vanaheimr Hermod <http://www.github.com/Vanaheimr/Hermod>
+ * Copyright (c) 2017-2018, Achim 'ahzf' Friedland <achim.friedland@graphdefined.com>
+ * This file is part of GraphDefined AsavieAPI <https://github.com/GraphDefined/AsavieAPI>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,18 +34,6 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 namespace com.GraphDefined.Asavie.API
 {
-
-    public enum SimCardStateValues
-    {
-        notactivated  = 0,
-        ready         = 1,
-        test          = 2,
-        live          = 3,
-        suspend       = 4,
-        bar           = 5,
-        unknown       = 6,
-        terminated    = 100
-    }
 
     /// <summary>
     /// The Asavie API.
@@ -859,7 +847,7 @@ namespace com.GraphDefined.Asavie.API
 
         #region GetHardwareSIMs    (AccountName, ...)
 
-        public async Task<APIResult<IEnumerable<JObject>>>
+        public async Task<APIResult<IEnumerable<HardwareSIM>>>
 
             GetHardwareSIMs(String                   AccountName,
 
@@ -934,59 +922,62 @@ namespace com.GraphDefined.Asavie.API
                     try
                     {
 
-                        if (APIResult<IEnumerable<JObject>>.TryParse(httpresponse,
-                                                                     out APIResult<IEnumerable<JObject>> Result,
-                                                                     JSONObj => {
+                        if (APIResult<IEnumerable<HardwareSIM>>.TryParse(httpresponse,
+                                                                         out APIResult<IEnumerable<HardwareSIM>> Result,
+                                                                         JSONObj => {
 
-                                                                         if (!JSONObj.ParseMandatory("Data",
-                                                                                                     "hardware SIMs information",
-                                                                                                     out JArray  ArrayOfSIMs,
-                                                                                                     out String  ErrorResponse))
-                                                                         {
-                                                                             throw new Exception(ErrorResponse);
-                                                                         }
+                                                                             if (!JSONObj.ParseMandatory("Data",
+                                                                                                         "hardware SIMs information",
+                                                                                                         out JArray  ArrayOfSIMs,
+                                                                                                         out String  ErrorResponse))
+                                                                             {
+                                                                                 throw new Exception(ErrorResponse);
+                                                                             }
 
-                                                                         var ListOfSIMs = new List<JObject>();
-                                                                         JObject simInfo = null;
+                                                                             var ListOfSIMs = new List<HardwareSIM>();
+                                                                             JObject simInfo = null;
 
-                                                                         foreach (var json in ArrayOfSIMs)
-                                                                         {
+                                                                             foreach (var json in ArrayOfSIMs)
+                                                                             {
 
-                                                                             simInfo = json as JObject;
+                                                                                 simInfo = json as JObject;
 
-                                                                             if (simInfo != null)
-                                                                                 ListOfSIMs.Add(simInfo);
+                                                                                 if (simInfo != null &&
+                                                                                     HardwareSIM.TryParseAsavie(simInfo, out HardwareSIM hardwareSIM))
+                                                                                 {
+                                                                                     ListOfSIMs.Add(hardwareSIM);
+                                                                                 }
 
-                                                                         }
+                                                                             }
 
-                                                                         return ListOfSIMs;
+                                                                             return ListOfSIMs;
 
-                                                                     }))
+                                                                         }))
                         {
                             return Result;
                         }
 
-                        return new APIResult<IEnumerable<JObject>>(false,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   "Asavie hardware SIMs information JSON could not be parsed!",
-                                                                   "",
-                                                                   "",
-                                                                   "");
+                        return new APIResult<IEnumerable<HardwareSIM>>(false,
+                                                                       0,
+                                                                       0,
+                                                                       0,
+                                                                       "Asavie hardware SIMs information JSON could not be parsed!",
+                                                                       "",
+                                                                       "",
+                                                                       "");
 
                     }
                     catch (Exception e)
                     {
 
-                        return new APIResult<IEnumerable<JObject>>(false,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
-                                                                   "",
-                                                                   "",
-                                                                   "");
+                        return new APIResult<IEnumerable<HardwareSIM>>(false,
+                                                                       0,
+                                                                       0,
+                                                                       0,
+                                                                       "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
+                                                                       "",
+                                                                       "",
+                                                                       "");
 
                     }
 
@@ -994,28 +985,28 @@ namespace com.GraphDefined.Asavie.API
 
                 #endregion
 
-                return new APIResult<IEnumerable<JObject>>(false,
-                                                           0,
-                                                           0,
-                                                           0,
-                                                           httpresponse.HTTPStatusCode.ToString(),
-                                                           "",
-                                                           "",
-                                                           "");
+                return new APIResult<IEnumerable<HardwareSIM>>(false,
+                                                               0,
+                                                               0,
+                                                               0,
+                                                               httpresponse.HTTPStatusCode.ToString(),
+                                                               "",
+                                                               "",
+                                                               "");
 
             }
 
             catch (Exception e)
             {
 
-                return new APIResult<IEnumerable<JObject>>(false,
-                                                           0,
-                                                           0,
-                                                           0,
-                                                           e.Message,
-                                                           "",
-                                                           "",
-                                                           "");
+                return new APIResult<IEnumerable<HardwareSIM>>(false,
+                                                               0,
+                                                               0,
+                                                               0,
+                                                               e.Message,
+                                                               "",
+                                                               "",
+                                                               "");
 
             }
 
@@ -1025,7 +1016,7 @@ namespace com.GraphDefined.Asavie.API
 
         #region GetHardwareSIM     (AccountName, SIMId, ...)
 
-        public async Task<APIResult<JObject>>
+        public async Task<APIResult<HardwareSIM>>
 
             GetHardwareSIM(String                   AccountName,
                            String                   SIMId,
@@ -1101,46 +1092,49 @@ namespace com.GraphDefined.Asavie.API
                     try
                     {
 
-                        if (APIResult<JObject>.TryParse(httpresponse,
-                                                        out APIResult<JObject> Result,
-                                                        JSONObj => {
+                        if (APIResult<HardwareSIM>.TryParse(httpresponse,
+                                                            out APIResult<HardwareSIM> Result,
+                                                            JSONObj => {
 
-                                                            if (!JSONObj.ParseMandatory("Data",
-                                                                                        "hardware SIMs information",
-                                                                                        out JObject SIM,
-                                                                                        out String  ErrorResponse))
-                                                            {
-                                                                throw new Exception(ErrorResponse);
-                                                            }
+                                                                if (!JSONObj.ParseMandatory("Data",
+                                                                                            "hardware SIMs information",
+                                                                                            out JObject SIM,
+                                                                                            out String  ErrorResponse))
+                                                                {
+                                                                    throw new Exception(ErrorResponse);
+                                                                }
 
-                                                            return SIM;
+                                                                if (HardwareSIM.TryParseAsavie(SIM, out HardwareSIM hardwareSIM))
+                                                                    return hardwareSIM;
 
-                                                        }))
+                                                                return null;
+
+                                                            }))
                         {
                             return Result;
                         }
 
-                        return new APIResult<JObject>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie hardware SIMs information JSON could not be parsed!",
-                                                      "",
-                                                      "",
-                                                      "");
+                        return new APIResult<HardwareSIM>(false,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          "Asavie hardware SIMs information JSON could not be parsed!",
+                                                          "",
+                                                          "",
+                                                          "");
 
                     }
                     catch (Exception e)
                     {
 
-                        return new APIResult<JObject>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
-                                                      "",
-                                                      "",
-                                                      "");
+                        return new APIResult<HardwareSIM>(false,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
+                                                          "",
+                                                          "",
+                                                          "");
 
                     }
 
@@ -1148,28 +1142,28 @@ namespace com.GraphDefined.Asavie.API
 
                 #endregion
 
-                return new APIResult<JObject>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              httpresponse.HTTPStatusCode.ToString(),
-                                              "",
-                                              "",
-                                              "");
+                return new APIResult<HardwareSIM>(false,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  httpresponse.HTTPStatusCode.ToString(),
+                                                  "",
+                                                  "",
+                                                  "");
 
             }
 
             catch (Exception e)
             {
 
-                return new APIResult<JObject>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              e.Message,
-                                              "",
-                                              "",
-                                              "");
+                return new APIResult<HardwareSIM>(false,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  e.Message,
+                                                  "",
+                                                  "",
+                                                  "");
 
             }
 
@@ -1179,11 +1173,11 @@ namespace com.GraphDefined.Asavie.API
 
         #region SetHardwareSIMState(AccountName, SIMId, NewSIMState, ...)
 
-        public async Task<APIResult<JObject>>
+        public async Task<APIResult<HardwareSIM>>
 
             SetHardwareSIMState(String                   AccountName,
                                 String                   SIMId,
-                                SimCardStateValues       NewSIMState,
+                                SimCardStates       NewSIMState,
 
                                 DateTime?                Timestamp           = null,
                                 CancellationToken?       CancellationToken   = null,
@@ -1282,46 +1276,49 @@ namespace com.GraphDefined.Asavie.API
                     try
                     {
 
-                        if (APIResult<JObject>.TryParse(httpresponse,
-                                                        out APIResult<JObject> Result,
-                                                        JSONObj => {
+                        if (APIResult<HardwareSIM>.TryParse(httpresponse,
+                                                            out APIResult<HardwareSIM> Result,
+                                                            JSONObj => {
 
-                                                            if (!JSONObj.ParseMandatory("Data",
-                                                                                        "hardware SIM information",
-                                                                                        out JObject SIM,
-                                                                                        out String  ErrorResponse))
-                                                            {
-                                                                throw new Exception(ErrorResponse);
-                                                            }
+                                                                if (!JSONObj.ParseMandatory("Data",
+                                                                                            "hardware SIM information",
+                                                                                            out JObject SIM,
+                                                                                            out String  ErrorResponse))
+                                                                {
+                                                                    throw new Exception(ErrorResponse);
+                                                                }
 
-                                                            return SIM;
+                                                                if (HardwareSIM.TryParseAsavie(SIM, out HardwareSIM hardwareSIM))
+                                                                    return hardwareSIM;
 
-                                                        }))
+                                                                return null;
+
+                                                            }))
                         {
                             return Result;
                         }
 
-                        return new APIResult<JObject>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie hardware SIMs information JSON could not be parsed!",
-                                                      "",
-                                                      "",
-                                                      "");
+                        return new APIResult<HardwareSIM>(false,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          "Asavie hardware SIMs information JSON could not be parsed!",
+                                                          "",
+                                                          "",
+                                                          "");
 
                     }
                     catch (Exception e)
                     {
 
-                        return new APIResult<JObject>(false,
-                                                      0,
-                                                      0,
-                                                      0,
-                                                      "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
-                                                      "",
-                                                      "",
-                                                      "");
+                        return new APIResult<HardwareSIM>(false,
+                                                          0,
+                                                          0,
+                                                          0,
+                                                          "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
+                                                          "",
+                                                          "",
+                                                          "");
 
                     }
 
@@ -1329,28 +1326,28 @@ namespace com.GraphDefined.Asavie.API
 
                 #endregion
 
-                return new APIResult<JObject>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              httpresponse.HTTPStatusCode.ToString(),
-                                              "",
-                                              "",
-                                              "");
+                return new APIResult<HardwareSIM>(false,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  httpresponse.HTTPStatusCode.ToString(),
+                                                  "",
+                                                  "",
+                                                  "");
 
             }
 
             catch (Exception e)
             {
 
-                return new APIResult<JObject>(false,
-                                              0,
-                                              0,
-                                              0,
-                                              e.Message,
-                                              "",
-                                              "",
-                                              "");
+                return new APIResult<HardwareSIM>(false,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  e.Message,
+                                                  "",
+                                                  "",
+                                                  "");
 
             }
 
