@@ -39,7 +39,7 @@ namespace com.GraphDefined.Asavie.API
         #region Properties
 
         public CLI            CLI                   { get; }
-        public SIM_Id         SIMNumber             { get; }
+        public SIM_Id?        SIMNumber             { get; }
         public String         Description           { get; }
         public String         InventoryRef          { get; }
         public SimCardStates  State                 { get; }
@@ -65,7 +65,7 @@ namespace com.GraphDefined.Asavie.API
         #region Constructor(s)
 
         public HardwareSIM(CLI            CLI,
-                           SIM_Id         SIMNumber,
+                           SIM_Id?        SIMNumber,
                            String         Description,
                            String         InventoryRef,
                            SimCardStates  State,
@@ -165,7 +165,9 @@ namespace com.GraphDefined.Asavie.API
 
 
                 HardwareSIM  = new HardwareSIM(CLI.   Parse(JSON["CLI"      ].Value<String>()),
-                                               SIM_Id.Parse(JSON["SIMNumber"].Value<String>()),
+                                               JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
+                                                   ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
+                                                   : default,
                                                JSON["Description"]?.          Value<String>(),
                                                JSON["InventoryRef"]?.         Value<String>(),
                                                JSON["State"]    != null ? (SimCardStates) Enum.Parse(typeof(SimCardStates), JSON["State"].Value<String>(), true) : SimCardStates.unknown,
@@ -177,14 +179,18 @@ namespace com.GraphDefined.Asavie.API
                                                JSON["Operator"] != null ? Operator_Id.Parse(JSON["Operator"].Value<String>()) : default(Operator_Id?),
                                                JSON["Hints"]?.                Value<String>(),
                                                JSON["NetworkStatus"]?.        Value<Byte>(),
-                                               JSON["Created"]?.              Value<DateTime>(),
+                                               JSON["Created"]?.Value<String>().IsNotNullOrEmpty() == true
+                                                   ? JSON["Created"].Value<DateTime>()
+                                                   : default,
                                                JSON["SOC"]?.                  Value<String>(),
                                                JSON["InternalSOC"]?.          Value<String>(),
                                                PurchaseOrder,
                                                JSON["Provider"] != null ? Provider_Id.Parse(JSON["Provider"].Value<String>()) : default(Provider_Id?),
                                                ProviderTariff,
                                                ProviderPrice,
-                                               JSON["ProviderStartDate"]?.    Value<DateTime>());
+                                               JSON["ProviderStartDate"]?.Value<String>().IsNotNullOrEmpty() == true
+                                                   ? JSON["ProviderStartDate"].Value<DateTime>()
+                                                   : default);
 
                 return true;
 
@@ -208,7 +214,9 @@ namespace com.GraphDefined.Asavie.API
             {
 
                 HardwareSIM  = new HardwareSIM(CLI.   Parse(JSON["CLI"      ].Value<String>()),
-                                               SIM_Id.Parse(JSON["SIMNumber"].Value<String>()),
+                                               JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
+                                                   ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
+                                                   : default,
                                                JSON["description"]?.          Value<String>(),
                                                JSON["inventoryRef"]?.         Value<String>(),
                                                JSON["state"] != null ? (SimCardStates) Enum.Parse(typeof(SimCardStates), JSON["State"].Value<String>(), true) : SimCardStates.unknown,
@@ -220,14 +228,18 @@ namespace com.GraphDefined.Asavie.API
                                                JSON["operator"] != null ? Operator_Id.Parse(JSON["operator"].Value<String>()) : default(Operator_Id?),
                                                JSON["hints"]?.                Value<String>(),
                                                JSON["networkStatus"]?.        Value<Byte>(),
-                                               JSON["created"]?.              Value<DateTime>(),
+                                               JSON["created"]?.Value<String>().IsNotNullOrEmpty() == true
+                                                   ? JSON["created"].Value<DateTime>()
+                                                   : default,
                                                JSON["SOC"]?.                  Value<String>(),
                                                JSON["internalSOC"]?.          Value<String>(),
                                                JSON["purchaseOrder"]?.        Value<String>(),
                                                JSON["provider"] != null ? Provider_Id.Parse(JSON["provider"].Value<String>()) : default(Provider_Id?),
                                                JSON["providerTariff"]?.       Value<String>(),
                                                JSON["providerPrice"]?.        Value<String>(),
-                                               JSON["providerStartDate"]?.    Value<DateTime>());
+                                               JSON["providerStartDate"]?.Value<String>().IsNotNullOrEmpty() == true
+                                                   ? JSON["providerStartDate"].Value<DateTime>()
+                                                   : default);
 
                 return true;
 
@@ -247,7 +259,10 @@ namespace com.GraphDefined.Asavie.API
         public JObject ToJSON()
 
             => JSONObject.Create(new JProperty("CLI",                        CLI.      ToString()),
-                                 new JProperty("SIMNumber",                  SIMNumber.ToString()),
+
+                                 SIMNumber.HasValue
+                                     ? new JProperty("SIMNumber",            SIMNumber.Value.ToString())
+                                     : null,
 
                                  Description.IsNotNullOrEmpty()
                                      ? new JProperty("description",          Description)

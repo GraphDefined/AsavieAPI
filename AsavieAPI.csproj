@@ -47,14 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AuthToken.cs" />
+    <Compile Include="APIResult.cs" />
     <Compile Include="Data\CLI.cs" />
     <Compile Include="Data\Operator_Id.cs" />
     <Compile Include="Data\Provider_Id.cs" />
     <Compile Include="Data\SIM_Id.cs" />
     <Compile Include="Data\SimCardStates.cs" />
-    <Compile Include="LastConnected.cs" />
-    <Compile Include="DevicesAPN.cs" />
-    <Compile Include="HardwareSIM.cs" />
+    <Compile Include="Data\Complex\LastConnected.cs" />
+    <Compile Include="Data\Complex\DevicesAPN.cs" />
+    <Compile Include="Data\Complex\HardwareSIM.cs" />
     <Compile Include="AsavieAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
