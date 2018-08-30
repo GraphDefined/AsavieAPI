@@ -38,27 +38,27 @@ namespace com.GraphDefined.Asavie.API
 
         #region Properties
 
-        public CLI            CLI                   { get; } // "204046868148242"
-        public SIM_Id         SIMNumber             { get; } // "89314404000452389019"
-        public String         Description           { get; } // null
-        public String         InventoryRef          { get; } // null
-        public SimCardStates  State                 { get; } // 1
-        public Byte?          Version               { get; } // 1
-        public Byte?          ActorStatus           { get; } // 0
-        public String         ForeignAttributes     { get; } // null
-        public String         Tariff                { get; } // null
-        public String         Bundle                { get; } // null
-        public Operator_Id?   Operator              { get; } // "vodafone"
-        public String         Hints                 { get; } // null
-        public Byte?          NetworkStatus         { get; } // 0
-        public DateTime?      Created               { get; } // "2018-07-31T14:42:01.8006321Z"
-        public String         SOC                   { get; } // "SOC190"
-        public String         InternalSOC           { get; } // null
-        public String         PurchaseOrder         { get; } // "na"
-        public Provider_Id?   Provider              { get; } // "westbase"
-        public String         ProviderTariff        { get; } // "na"
-        public String         ProviderPrice         { get; } // "na"
-        public DateTime?      ProviderStartDate     { get; } // "2018-07-31T14:42:01.764135Z"
+        public CLI            CLI                   { get; }
+        public SIM_Id         SIMNumber             { get; }
+        public String         Description           { get; }
+        public String         InventoryRef          { get; }
+        public SimCardStates  State                 { get; }
+        public Byte?          Version               { get; }
+        public Byte?          ActorStatus           { get; }
+        public String         ForeignAttributes     { get; }
+        public String         Tariff                { get; }
+        public String         Bundle                { get; }
+        public Operator_Id?   Operator              { get; }
+        public String         Hints                 { get; }
+        public Byte?          NetworkStatus         { get; }
+        public DateTime?      Created               { get; }
+        public String         SOC                   { get; }
+        public String         InternalSOC           { get; }
+        public String         PurchaseOrder         { get; }
+        public Provider_Id?   Provider              { get; }
+        public String         ProviderTariff        { get; }
+        public String         ProviderPrice         { get; }
+        public DateTime?      ProviderStartDate     { get; }
 
         #endregion
 
@@ -118,6 +118,35 @@ namespace com.GraphDefined.Asavie.API
 
         public static Boolean TryParseAsavie(JObject JSON, out HardwareSIM HardwareSIM)
         {
+
+            #region Documentation
+
+            // GetHardwareSIMs:
+            // {
+            //    "CLI":                    "204043729xxxxxx",
+            //    "SIMNumber":              "89314404000132xxxxxx",
+            //    "Description":            null,
+            //    "InventoryRef":           null,
+            //    "State":                  3,
+            //    "Version":                5,
+            //    "ActorStatus":            0,
+            //    "ForeignAttributes":      null,
+            //    "Tariff":                 null,
+            //    "Bundle":                 null,
+            //    "Operator":               "vodafone",
+            //    "Hints":                  null,
+            //    "NetworkStatus":          0,
+            //    "Created":                "2018-04-31T10:44:41.7019783Z",
+            //    "SOC":                    null,
+            //    "InternalSOC":            null,
+            //    "PurchaseOrder":          "na",
+            //    "Provider":               "westbase",
+            //    "ProviderTariff":         "SP01_500MAX#10mb",
+            //    "ProviderPrice":          "2.00gbp",
+            //    "ProviderStartDate":      "2018-04-31T11:00:00Z"
+            // }
+
+            #endregion
 
             try
             {

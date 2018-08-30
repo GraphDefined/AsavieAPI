@@ -935,18 +935,18 @@ namespace com.GraphDefined.Asavie.API
                                                                              }
 
                                                                              var ListOfSIMs = new List<HardwareSIM>();
-                                                                             JObject simInfo = null;
 
-                                                                             foreach (var json in ArrayOfSIMs)
+                                                                             foreach (var jToken in ArrayOfSIMs)
                                                                              {
 
-                                                                                 simInfo = json as JObject;
-
-                                                                                 if (simInfo != null &&
-                                                                                     HardwareSIM.TryParseAsavie(simInfo, out HardwareSIM hardwareSIM))
+                                                                                 if (jToken is JObject jObject &&
+                                                                                     HardwareSIM.TryParseAsavie(jObject, out HardwareSIM hardwareSIM))
                                                                                  {
                                                                                      ListOfSIMs.Add(hardwareSIM);
                                                                                  }
+
+                                                                                 else
+                                                                                     throw new Exception("Could not parse '" + jToken + "' as HardwareSIM information!");
 
                                                                              }
 
@@ -1524,7 +1524,7 @@ namespace com.GraphDefined.Asavie.API
 
         #region GetDevicesAPNs     (AccountName, NetworkName, ...)
 
-        public async Task<APIResult<IEnumerable<JObject>>>
+        public async Task<APIResult<IEnumerable<DevicesAPN>>>
 
             GetDevicesAPNs(String                   AccountName,
                            String                   NetworkName,
@@ -1600,59 +1600,62 @@ namespace com.GraphDefined.Asavie.API
                     try
                     {
 
-                        if (APIResult<IEnumerable<JObject>>.TryParse(httpresponse,
-                                                                     out APIResult<IEnumerable<JObject>> Result,
+                        if (APIResult<IEnumerable<DevicesAPN>>.TryParse(httpresponse,
+                                                                     out APIResult<IEnumerable<DevicesAPN>> Result,
                                                                      JSONObj => {
 
                                                                          if (!JSONObj.ParseMandatory("Data",
-                                                                                                     "hardware SIMs information",
-                                                                                                     out JArray  ArrayOfSIMs,
+                                                                                                     "devices APN information",
+                                                                                                     out JArray  ArrayOfDevicesAPNs,
                                                                                                      out String  ErrorResponse))
                                                                          {
                                                                              throw new Exception(ErrorResponse);
                                                                          }
 
-                                                                         var ListOfSIMs = new List<JObject>();
-                                                                         JObject simInfo = null;
+                                                                         var resultList = new List<DevicesAPN>();
 
-                                                                         foreach (var json in ArrayOfSIMs)
+                                                                         foreach (var jToken in ArrayOfDevicesAPNs)
                                                                          {
 
-                                                                             simInfo = json as JObject;
+                                                                             if (jToken is JObject jObject &&
+                                                                                 DevicesAPN.TryParseAsavie(jObject, out DevicesAPN devicesAPN))
+                                                                             {
+                                                                                 resultList.Add(devicesAPN);
+                                                                             }
 
-                                                                             if (simInfo != null)
-                                                                                 ListOfSIMs.Add(simInfo);
+                                                                             else
+                                                                                 throw new Exception("Could not parse '" + jToken + "' as DevicesAPN information!");
 
                                                                          }
 
-                                                                         return ListOfSIMs;
+                                                                         return resultList;
 
                                                                      }))
                         {
                             return Result;
                         }
 
-                        return new APIResult<IEnumerable<JObject>>(false,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   "Asavie hardware SIMs information JSON could not be parsed!",
-                                                                   "",
-                                                                   "",
-                                                                   "");
+                        return new APIResult<IEnumerable<DevicesAPN>>(false,
+                                                                      0,
+                                                                      0,
+                                                                      0,
+                                                                      "Asavie hardware SIMs information JSON could not be parsed!",
+                                                                      "",
+                                                                      "",
+                                                                      "");
 
                     }
                     catch (Exception e)
                     {
 
-                        return new APIResult<IEnumerable<JObject>>(false,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
-                                                                   "",
-                                                                   "",
-                                                                   "");
+                        return new APIResult<IEnumerable<DevicesAPN>>(false,
+                                                                      0,
+                                                                      0,
+                                                                      0,
+                                                                      "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
+                                                                      "",
+                                                                      "",
+                                                                      "");
 
                     }
 
@@ -1660,28 +1663,28 @@ namespace com.GraphDefined.Asavie.API
 
                 #endregion
 
-                return new APIResult<IEnumerable<JObject>>(false,
-                                                           0,
-                                                           0,
-                                                           0,
-                                                           httpresponse.HTTPStatusCode.ToString(),
-                                                           "",
-                                                           "",
-                                                           "");
+                return new APIResult<IEnumerable<DevicesAPN>>(false,
+                                                              0,
+                                                              0,
+                                                              0,
+                                                              httpresponse.HTTPStatusCode.ToString(),
+                                                              "",
+                                                              "",
+                                                              "");
 
             }
 
             catch (Exception e)
             {
 
-                return new APIResult<IEnumerable<JObject>>(false,
-                                                           0,
-                                                           0,
-                                                           0,
-                                                           e.Message,
-                                                           "",
-                                                           "",
-                                                           "");
+                return new APIResult<IEnumerable<DevicesAPN>>(false,
+                                                              0,
+                                                              0,
+                                                              0,
+                                                              e.Message,
+                                                              "",
+                                                              "",
+                                                              "");
 
             }
 
