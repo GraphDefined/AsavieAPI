@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Net.Security;
 using System.Threading.Tasks;
@@ -406,7 +407,7 @@ namespace com.GraphDefined.Asavie.API
 
         public async Task<APIResult<JObject>>
 
-            GetAccount(String                   AccountName,
+            GetAccount(Account_Id               AccountName,
 
                        DateTime?                Timestamp           = null,
                        CancellationToken?       CancellationToken   = null,
@@ -414,11 +415,6 @@ namespace com.GraphDefined.Asavie.API
                        TimeSpan?                RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -528,7 +524,7 @@ namespace com.GraphDefined.Asavie.API
 
         public async Task<APIResult<IEnumerable<HardwareSIM>>>
 
-            GetHardwareSIMs(String                   AccountName,
+            GetHardwareSIMs(Account_Id               AccountName,
 
                             DateTime?                Timestamp           = null,
                             CancellationToken?       CancellationToken   = null,
@@ -536,11 +532,6 @@ namespace com.GraphDefined.Asavie.API
                             TimeSpan?                RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -693,12 +684,12 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region GetHardwareSIM     (AccountName, SIMId, ...)
+        #region GetHardwareSIM     (AccountName, CLI, ...)
 
         public async Task<APIResult<HardwareSIM>>
 
-            GetHardwareSIM(String                   AccountName,
-                           String                   SIMId,
+            GetHardwareSIM(Account_Id               AccountName,
+                           CLI                      CLI,
 
                            DateTime?                Timestamp           = null,
                            CancellationToken?       CancellationToken   = null,
@@ -706,11 +697,6 @@ namespace com.GraphDefined.Asavie.API
                            TimeSpan?                RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -724,7 +710,7 @@ namespace com.GraphDefined.Asavie.API
                                                          RemotePort:  HTTPPort,
                                                          DNSClient:   DNSClient ?? this.DNSClient).
 
-                                           Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + SIMId),
+                                           Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI),
 
                                                                         requestbuilder => {
                                                                             requestbuilder.Host           = VirtualHostname;
@@ -850,12 +836,12 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region SetHardwareSIMState(AccountName, SIMId, NewSIMState, ...)
+        #region SetHardwareSIMState(AccountName, CLI, NewSIMState, ...)
 
         public async Task<APIResult<HardwareSIM>>
 
-            SetHardwareSIMState(String              AccountName,
-                                String              SIMId,
+            SetHardwareSIMState(Account_Id          AccountName,
+                                CLI                 CLI,
                                 SimCardStates       NewSIMState,
 
                                 DateTime?           Timestamp           = null,
@@ -864,11 +850,6 @@ namespace com.GraphDefined.Asavie.API
                                 TimeSpan?           RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -882,7 +863,7 @@ namespace com.GraphDefined.Asavie.API
                                                          RemotePort:  HTTPPort,
                                                          DNSClient:   DNSClient ?? this.DNSClient).
 
-                                           Execute(client => client.PATCH(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + SIMId),
+                                           Execute(client => client.PATCH(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI),
 
                                                                           requestbuilder => {
                                                                               requestbuilder.Host           = VirtualHostname;
@@ -1035,23 +1016,72 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
+        #region GetSIMIdForNumber  (AccountName, SIMNumber, ...)
+
+        public async Task<APIResult<CLI>>
+
+            GetSIMIdForNumber(Account_Id          AccountName,
+                              SIM_Id              SIMNumber,
+
+                              DateTime?           Timestamp           = null,
+                              CancellationToken?  CancellationToken   = null,
+                              EventTracking_Id    EventTrackingId     = null,
+                              TimeSpan?           RequestTimeout      = null)
+
+        {
+
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+
+            var hardwareSIMs = await GetHardwareSIMs(AccountName,
+                                                     DateTime.UtcNow,
+                                                     CancellationToken,
+                                                     EventTrackingId,
+                                                     RequestTimeout);
+
+            if (hardwareSIMs.Success)
+            {
+
+                var hardwareSIM = hardwareSIMs.Data.FirstOrDefault(hw => hw.SIMNumber.HasValue && hw.SIMNumber.Value == SIMNumber);
+
+                if (hardwareSIM != null)
+                    return new APIResult<CLI>(hardwareSIM.CLI,
+                                              true,
+                                              0,
+                                              0,
+                                              0,
+                                              "",
+                                              "",
+                                              "",
+                                              "");
+
+            }
+
+            return new APIResult<CLI>(hardwareSIMs.Success,
+                                      hardwareSIMs.Code,
+                                      hardwareSIMs.ErrorCode,
+                                      hardwareSIMs.ErrorSubCode,
+                                      hardwareSIMs.ErrorDescription,
+                                      hardwareSIMs.Meta,
+                                      hardwareSIMs.StatusUrl,
+                                      hardwareSIMs.ContinuationToken);
+
+        }
+
+        #endregion
+
+
         #region GetNetworks        (AccountName, ...)
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
-            GetNetworks(String                   AccountName,
+            GetNetworks(Account_Id          AccountName,
 
-                        DateTime?                Timestamp           = null,
-                        CancellationToken?       CancellationToken   = null,
-                        EventTracking_Id         EventTrackingId     = null,
-                        TimeSpan?                RequestTimeout      = null)
+                        DateTime?           Timestamp           = null,
+                        CancellationToken?  CancellationToken   = null,
+                        EventTracking_Id    EventTrackingId     = null,
+                        TimeSpan?           RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -1205,20 +1235,15 @@ namespace com.GraphDefined.Asavie.API
 
         public async Task<APIResult<IEnumerable<DevicesAPN>>>
 
-            GetDevicesAPNs(String                   AccountName,
-                           String                   NetworkName,
+            GetDevicesAPNs(Account_Id          AccountName,
+                           Network_Id          NetworkName,
 
-                           DateTime?                Timestamp           = null,
-                           CancellationToken?       CancellationToken   = null,
-                           EventTracking_Id         EventTrackingId     = null,
-                           TimeSpan?                RequestTimeout      = null)
+                           DateTime?           Timestamp           = null,
+                           CancellationToken?  CancellationToken   = null,
+                           EventTracking_Id    EventTrackingId     = null,
+                           TimeSpan?           RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -1376,8 +1401,8 @@ namespace com.GraphDefined.Asavie.API
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
-            GetClientSessions(String              AccountName,
-                              String              NetworkName,
+            GetClientSessions(Account_Id          AccountName,
+                              Network_Id          NetworkName,
                               DateTime?           From                = null,
                               DateTime?           To                  = null,
 
@@ -1387,11 +1412,6 @@ namespace com.GraphDefined.Asavie.API
                               TimeSpan?           RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
@@ -1542,19 +1562,14 @@ namespace com.GraphDefined.Asavie.API
 
         public async Task<APIResult<IEnumerable<JObject>>>
 
-            GetLogs(String                   AccountName,
+            GetLogs(Account_Id          AccountName,
 
-                    DateTime?                Timestamp           = null,
-                    CancellationToken?       CancellationToken   = null,
-                    EventTracking_Id         EventTrackingId     = null,
-                    TimeSpan?                RequestTimeout      = null)
+                    DateTime?           Timestamp           = null,
+                    CancellationToken?  CancellationToken   = null,
+                    EventTracking_Id    EventTrackingId     = null,
+                    TimeSpan?           RequestTimeout      = null)
 
         {
-
-            AccountName = AccountName?.Trim();
-
-            if (AccountName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(AccountName), "The given account name must not be null or empty!");
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 

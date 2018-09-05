@@ -41,6 +41,9 @@ namespace com.GraphDefined.Asavie.API
     public partial class AsavieAPI
     {
 
+        /// <summary>
+        /// A generic Asavie API.
+        /// </summary>
         public class APIResult<T>
         {
 

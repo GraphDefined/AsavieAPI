@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Network_Id.cs" />
+    <Compile Include="Data\Account_Id.cs" />
     <Compile Include="Data\AuthToken.cs" />
     <Compile Include="APIResult.cs" />
     <Compile Include="Data\CLI.cs" />
