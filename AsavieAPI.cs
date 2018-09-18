@@ -301,6 +301,9 @@ namespace com.GraphDefined.Asavie.API
 
                 #region Upstream HTTP request...
 
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
+
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
                                                          RemotePort:  HTTPPort,
@@ -423,6 +426,9 @@ namespace com.GraphDefined.Asavie.API
 
                 #region Upstream HTTP request...
 
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
+
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
                                                          RemotePort:  HTTPPort,
@@ -538,11 +544,10 @@ namespace com.GraphDefined.Asavie.API
             try
             {
 
+                #region Upstream HTTP request...
+
                 if (CurrentAccessToken.Token == null)
                     CurrentAccessToken = await NewAuthToken();
-
-
-                #region Upstream HTTP request...
 
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
@@ -709,6 +714,9 @@ namespace com.GraphDefined.Asavie.API
 
                 #region Upstream HTTP request...
 
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
+
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
                                                          RemotePort:  HTTPPort,
@@ -861,6 +869,9 @@ namespace com.GraphDefined.Asavie.API
             {
 
                 #region Upstream HTTP request...
+
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
 
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
@@ -1020,7 +1031,7 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region GetSIMIdForNumber  (AccountName, SIMNumber, ...)
+        #region GetSIMIdForNumber      (AccountName, SIMNumber, ...)
 
         public async Task<APIResult<CLI>>
 
@@ -1083,6 +1094,69 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
+        #region GetHardwareSIMForNumber(AccountName, SIMNumber, ...)
+
+        public async Task<APIResult<HardwareSIM>>
+
+            GetHardwareSIMForNumber(Account_Id          AccountName,
+                                    SIM_Id              SIMNumber,
+
+                                    DateTime?           Timestamp           = null,
+                                    CancellationToken?  CancellationToken   = null,
+                                    EventTracking_Id    EventTrackingId     = null,
+                                    TimeSpan?           RequestTimeout      = null)
+
+        {
+
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+
+            var hardwareSIMs = await GetHardwareSIMs(AccountName,
+                                                     DateTime.UtcNow,
+                                                     CancellationToken,
+                                                     EventTrackingId,
+                                                     RequestTimeout);
+
+            if (hardwareSIMs.Success)
+            {
+
+                var hardwareSIM = hardwareSIMs.Data.FirstOrDefault(hw => hw.SIMNumber.HasValue && hw.SIMNumber.Value.Equals(SIMNumber));
+
+                if (hardwareSIM != null)
+                    return new APIResult<HardwareSIM>(hardwareSIM,
+                                                      true,
+                                                      0,
+                                                      0,
+                                                      0,
+                                                      "",
+                                                      "",
+                                                      "",
+                                                      "");
+
+                // HardwareSIM not found!
+                return new APIResult<HardwareSIM>(false,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  "",
+                                                  "",
+                                                  "",
+                                                  "");
+
+            }
+
+            return new APIResult<HardwareSIM>(hardwareSIMs.Success,
+                                              hardwareSIMs.Code,
+                                              hardwareSIMs.ErrorCode,
+                                              hardwareSIMs.ErrorSubCode,
+                                              hardwareSIMs.ErrorDescription,
+                                              hardwareSIMs.Meta,
+                                              hardwareSIMs.StatusUrl,
+                                              hardwareSIMs.ContinuationToken);
+
+        }
+
+        #endregion
+
 
         #region GetNetworks        (AccountName, ...)
 
@@ -1103,6 +1177,9 @@ namespace com.GraphDefined.Asavie.API
             {
 
                 #region Upstream HTTP request...
+
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
 
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
@@ -1265,6 +1342,9 @@ namespace com.GraphDefined.Asavie.API
             {
 
                 #region Upstream HTTP request...
+
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
 
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
@@ -1442,6 +1522,9 @@ namespace com.GraphDefined.Asavie.API
 
                 #region Upstream HTTP request...
 
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
+
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
                                                          RemotePort:  HTTPPort,
@@ -1591,6 +1674,9 @@ namespace com.GraphDefined.Asavie.API
             {
 
                 #region Upstream HTTP request...
+
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
 
                 var httpresponse = await new HTTPSClient(Hostname,
                                                          RemoteCertificateValidator,
