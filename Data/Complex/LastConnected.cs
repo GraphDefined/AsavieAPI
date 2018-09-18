@@ -32,8 +32,8 @@ namespace com.GraphDefined.Asavie.API
     /// Information about the last connection of a device.
     /// </summary>
     public struct Last_Connected : IEquatable<Last_Connected>,
-                                  IComparable<Last_Connected>,
-                                  IComparable
+                                   IComparable<Last_Connected>,
+                                   IComparable
     {
 
         #region Properties
@@ -48,9 +48,9 @@ namespace com.GraphDefined.Asavie.API
         #region Constructor(s)
 
         public Last_Connected(DateTime   Start,
-                             DateTime?  End,
-                             String     MCC,
-                             String     MNC)
+                              DateTime?  End,
+                              String     MCC,
+                              String     MNC)
         {
 
             this.Start  = Start;

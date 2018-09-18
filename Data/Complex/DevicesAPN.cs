@@ -167,14 +167,14 @@ namespace com.GraphDefined.Asavie.API
 
                 DevicesAPN  = new DevicesAPN(CLI.   Parse(JSON["CLI"      ].Value<String>()),
                                              JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                 ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
-                                                 : default,
+                                                 ? new SIM_Id?(SIM_Id.Parse(JSON["SIMNumber"].Value<String>()))
+                                                 : null,
                                              JSON["SOC"                 ]?.Value<String>(),
                                              JSON["InternalSOC"         ]?.Value<String>(),
                                              JSON["Description"         ]?.Value<String>(),
                                              JSON["IPAddress"]?.Value<String>().IsNotNullOrEmpty() == true
                                                  ? org.GraphDefined.Vanaheimr.Hermod.IPAddress.Parse(JSON["IPAddress"]?.Value<String>())
-                                                 : default,
+                                                 : null,
                                              JSON["StartDate"           ]?.Value<DateTime>(),
                                              EndDate,
                                              JSON["FriendlyName"        ]?.Value<String>(),
@@ -189,11 +189,11 @@ namespace com.GraphDefined.Asavie.API
                                              JSON["IMEI"                ]?.Value<String>(),
                                              JSON["LastSync"            ]?.Value<DateTime>(),
                                              JSON["LastConnected_Start"] is JObject
-                                                 ? new Last_Connected(JSON["LastConnected_Start"]. Value<DateTime>(),
-                                                                      EndDate,
-                                                                      JSON["LastConnected_MCC"  ]?.Value<String>(),
-                                                                      JSON["LastConnected_MNC"  ]?.Value<String>())
-                                                 : default(Last_Connected?));
+                                                 ? new Last_Connected?(new Last_Connected(JSON["LastConnected_Start"]. Value<DateTime>(),
+                                                                                          EndDate,
+                                                                                          JSON["LastConnected_MCC"  ]?.Value<String>(),
+                                                                                          JSON["LastConnected_MNC"  ]?.Value<String>()))
+                                                 : null);
 
                 return true;
 

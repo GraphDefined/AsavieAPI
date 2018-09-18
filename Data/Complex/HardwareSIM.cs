@@ -215,8 +215,8 @@ namespace com.GraphDefined.Asavie.API
 
                 HardwareSIM  = new HardwareSIM(CLI.   Parse(JSON["CLI"      ].Value<String>()),
                                                JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                   ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
-                                                   : default,
+                                                   ? new SIM_Id?(SIM_Id.Parse(JSON["SIMNumber"].Value<String>()))
+                                                   : null,
                                                JSON["description"]?.          Value<String>(),
                                                JSON["inventoryRef"]?.         Value<String>(),
                                                JSON["state"] != null ? (SimCardStates) Enum.Parse(typeof(SimCardStates), JSON["State"].Value<String>(), true) : SimCardStates.unknown,
@@ -225,21 +225,21 @@ namespace com.GraphDefined.Asavie.API
                                                JSON["foreignAttributes"]?.    Value<String>(),
                                                JSON["tariff"]?.               Value<String>(),
                                                JSON["bundle"]?.               Value<String>(),
-                                               JSON["operator"] != null ? Operator_Id.Parse(JSON["operator"].Value<String>()) : default(Operator_Id?),
+                                               JSON["operator"] != null ? new Operator_Id?(Operator_Id.Parse(JSON["operator"].Value<String>())) : null,
                                                JSON["hints"]?.                Value<String>(),
                                                JSON["networkStatus"]?.        Value<Byte>(),
                                                JSON["created"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                   ? JSON["created"].Value<DateTime>()
-                                                   : default,
+                                                   ? JSON["created"]?.Value<DateTime>()
+                                                   : null,
                                                JSON["SOC"]?.                  Value<String>(),
                                                JSON["internalSOC"]?.          Value<String>(),
                                                JSON["purchaseOrder"]?.        Value<String>(),
-                                               JSON["provider"] != null ? Provider_Id.Parse(JSON["provider"].Value<String>()) : default(Provider_Id?),
+                                               JSON["provider"] != null ? new Provider_Id?(Provider_Id.Parse(JSON["provider"].Value<String>())) : null,
                                                JSON["providerTariff"]?.       Value<String>(),
                                                JSON["providerPrice"]?.        Value<String>(),
                                                JSON["providerStartDate"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                   ? JSON["providerStartDate"].Value<DateTime>()
-                                                   : default);
+                                                   ? JSON["providerStartDate"]?.Value<DateTime>()
+                                                   : null);
 
                 return true;
 
