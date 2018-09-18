@@ -46,7 +46,7 @@ namespace com.GraphDefined.Asavie.API
         /// The length of the Provider identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 

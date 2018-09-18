@@ -46,7 +46,7 @@ namespace com.GraphDefined.Asavie.API
         /// The length of the SIM identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) InternalId?.Length;
 
         #endregion
 
@@ -147,9 +147,11 @@ namespace com.GraphDefined.Asavie.API
         /// <summary>
         /// Clone a SIM identification.
         /// </summary>
-
         public SIM_Id Clone
-            => new SIM_Id(new String(InternalId.ToCharArray()));
+
+            => new SIM_Id(InternalId != null
+                              ? new String(InternalId.ToCharArray())
+                              : null);
 
         #endregion
 
@@ -250,11 +252,11 @@ namespace com.GraphDefined.Asavie.API
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            if (!(Object is SIM_Id))
+            if (!(Object is SIM_Id SIMId))
                 throw new ArgumentException("The given object is not a SIM identification!",
                                             nameof(Object));
 
-            return CompareTo((SIM_Id) Object);
+            return CompareTo(SIMId);
 
         }
 
@@ -271,6 +273,9 @@ namespace com.GraphDefined.Asavie.API
 
             if ((Object) SIMId == null)
                 throw new ArgumentNullException(nameof(SIMId),  "The given SIM identification must not be null!");
+
+            if (InternalId == null && SIMId.InternalId == null)
+                return 0;
 
             return String.Compare(InternalId, SIMId.InternalId, StringComparison.Ordinal);
 
@@ -295,10 +300,10 @@ namespace com.GraphDefined.Asavie.API
             if (Object == null)
                 return false;
 
-            if (!(Object is SIM_Id))
+            if (!(Object is SIM_Id SIMId))
                 return false;
 
-            return Equals((SIM_Id) Object);
+            return Equals(SIMId);
 
         }
 
@@ -314,8 +319,15 @@ namespace com.GraphDefined.Asavie.API
         public Boolean Equals(SIM_Id SIMId)
         {
 
-            if ((Object) SIMId == null)
+            if (InternalId == null)
+            {
+
+                if (SIMId.InternalId == null)
+                    return true;
+
                 return false;
+
+            }
 
             return InternalId.Equals(SIMId.InternalId);
 
@@ -332,7 +344,10 @@ namespace com.GraphDefined.Asavie.API
         /// </summary>
         /// <returns>The HashCode of this object.</returns>
         public override Int32 GetHashCode()
-            => InternalId.GetHashCode();
+
+            => InternalId != null
+                   ? InternalId.GetHashCode()
+                   : 0;
 
         #endregion
 
@@ -342,7 +357,7 @@ namespace com.GraphDefined.Asavie.API
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-            => InternalId;
+            => InternalId ?? "<null>";
 
         #endregion
 

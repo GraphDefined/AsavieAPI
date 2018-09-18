@@ -538,6 +538,10 @@ namespace com.GraphDefined.Asavie.API
             try
             {
 
+                if (CurrentAccessToken.Token == null)
+                    CurrentAccessToken = await NewAuthToken();
+
+
                 #region Upstream HTTP request...
 
                 var httpresponse = await new HTTPSClient(Hostname,
@@ -1041,7 +1045,7 @@ namespace com.GraphDefined.Asavie.API
             if (hardwareSIMs.Success)
             {
 
-                var hardwareSIM = hardwareSIMs.Data.FirstOrDefault(hw => hw.SIMNumber.HasValue && hw.SIMNumber.Value == SIMNumber);
+                var hardwareSIM = hardwareSIMs.Data.FirstOrDefault(hw => hw.SIMNumber.HasValue && hw.SIMNumber.Value.Equals(SIMNumber));
 
                 if (hardwareSIM != null)
                     return new APIResult<CLI>(hardwareSIM.CLI,
@@ -1053,6 +1057,16 @@ namespace com.GraphDefined.Asavie.API
                                               "",
                                               "",
                                               "");
+
+                // SIMNumber not found!
+                return new APIResult<CLI>(false,
+                                          0,
+                                          0,
+                                          0,
+                                          "",
+                                          "",
+                                          "",
+                                          "");
 
             }
 
