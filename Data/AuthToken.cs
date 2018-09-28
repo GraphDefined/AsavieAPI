@@ -29,9 +29,11 @@ namespace com.GraphDefined.Asavie.API
 
         #region Properties
 
-        public String    Token     { get; }
+        public String    Token          { get; }
 
-        public DateTime  Expires   { get; }
+        public DateTime  Expires        { get; }
+
+        public DateTime  RefreshAfter   { get; }
 
         public TimeSpan  Timeout
             => Expires - DateTime.UtcNow;
@@ -43,8 +45,11 @@ namespace com.GraphDefined.Asavie.API
         public AuthToken(String    Token,
                          DateTime  Expires)
         {
-            this.Token    = Token;
-            this.Expires  = Expires;
+
+            this.Token         = Token;
+            this.Expires       = Expires;
+            this.RefreshAfter  = DateTime.UtcNow.AddMinutes((Expires - DateTime.UtcNow).TotalMinutes / 2);
+
         }
 
         #endregion

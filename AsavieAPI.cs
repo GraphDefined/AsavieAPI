@@ -540,155 +540,179 @@ namespace com.GraphDefined.Asavie.API
         {
 
             Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            String ErrorResponse = null;
 
             try
             {
 
-                #region Upstream HTTP request...
-
-                if (CurrentAccessToken.Token == null)
+                if (CurrentAccessToken.Token == null ||
+                    CurrentAccessToken.RefreshAfter < DateTime.UtcNow)
+                {
                     CurrentAccessToken = await NewAuthToken();
+                }
 
-                var httpresponse = await new HTTPSClient(Hostname,
-                                                         RemoteCertificateValidator,
-                                                         RemotePort:  HTTPPort,
-                                                         DNSClient:   DNSClient ?? this.DNSClient).
+                HTTPResponse httpresponse   = null;
 
-                                           Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims"),
+                var retry = 0;
 
-                                                                        requestbuilder => {
-                                                                            requestbuilder.Host           = VirtualHostname;
-                                                                            requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
-                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                        }),
-
-                                                   //RequestLogDelegate:   OnRemoteStartRequest,
-                                                   //ResponseLogDelegate:  OnRemoteStartResponse,
-                                                   CancellationToken:    CancellationToken,
-                                                   EventTrackingId:      EventTrackingId,
-                                                   RequestTimeout:       RequestTimeout ?? TimeSpan.FromSeconds(60)).
-
-                                           ConfigureAwait(false);
-
-                #endregion
-
-                #region HTTPStatusCode.OK
-
-                if (httpresponse.HTTPStatusCode == HTTPStatusCode.OK)
+                do
                 {
 
-                    // HTTP/1.1 200 OK
-                    // Cache-Control:    no-cache
-                    // Pragma:           no-cache
-                    // Content-Length:   658
-                    // Content-Type:     application/json;charset=UTF-8
-                    // Expires:          -1
-                    // Request-Context:  appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
-                    // Date:             Mon, 16 Jul 2018 21:10:29 GMT
-                    // 
-                    // {
-                    //   "Data":               [{ ... }, { ... }],
-                    //   "Success":            true,
-                    //   "Code":               200,
-                    //   "ErrorCode":          0,
-                    //   "ErrorSubCode":       0,
-                    //   "ErrorDescription":   "",
-                    //   "Meta":               "",
-                    //   "StatusUrl":          null,
-                    //   "ContinuationToken":  ""
-                    // }
+                    #region Upstream HTTP request...
 
                     try
                     {
 
-                        if (APIResult<IEnumerable<HardwareSIM>>.TryParse(httpresponse,
-                                                                         out APIResult<IEnumerable<HardwareSIM>> Result,
-                                                                         JSONObj => {
+                        httpresponse = await new HTTPSClient(Hostname,
+                                                             RemoteCertificateValidator,
+                                                             RemotePort:  HTTPPort,
+                                                             DNSClient:   DNSClient ?? this.DNSClient).
 
-                                                                             if (!JSONObj.ParseMandatory("Data",
-                                                                                                         "hardware SIMs information",
-                                                                                                         out JArray  ArrayOfSIMs,
-                                                                                                         out String  ErrorResponse))
-                                                                             {
-                                                                                 throw new Exception(ErrorResponse);
-                                                                             }
+                                                 Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims"),
 
-                                                                             var ListOfSIMs = new List<HardwareSIM>();
+                                                                              requestbuilder => {
+                                                                                  requestbuilder.Host          = VirtualHostname;
+                                                                                  requestbuilder.Authorization = new HTTPBearerAuthentication(CurrentAccessToken.Token);
+                                                                                  requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                              }),
 
-                                                                             foreach (var jToken in ArrayOfSIMs)
-                                                                             {
+                                                         //RequestLogDelegate:  OnRemoteStartRequest,
+                                                         //ResponseLogDelegate: OnRemoteStartResponse,
+                                                         CancellationToken:     CancellationToken,
+                                                         EventTrackingId:       EventTrackingId,
+                                                         RequestTimeout:        RequestTimeout ?? TimeSpan.FromSeconds(60)).
 
-                                                                                 if (jToken is JObject jObject &&
-                                                                                     HardwareSIM.TryParseAsavie(jObject, out HardwareSIM hardwareSIM))
-                                                                                 {
-                                                                                     ListOfSIMs.Add(hardwareSIM);
-                                                                                 }
-
-                                                                                 else
-                                                                                     throw new Exception("Could not parse '" + jToken + "' as HardwareSIM information!");
-
-                                                                             }
-
-                                                                             return ListOfSIMs;
-
-                                                                         }))
-                        {
-                            return Result;
-                        }
-
-                        return new APIResult<IEnumerable<HardwareSIM>>(false,
-                                                                       0,
-                                                                       0,
-                                                                       0,
-                                                                       "Asavie hardware SIMs information JSON could not be parsed!",
-                                                                       "",
-                                                                       "",
-                                                                       "");
+                                                 ConfigureAwait(false);
 
                     }
                     catch (Exception e)
                     {
+                        ErrorResponse = "Querying the Asavie API failed!";
+                    }
 
-                        return new APIResult<IEnumerable<HardwareSIM>>(false,
-                                                                       0,
-                                                                       0,
-                                                                       0,
-                                                                       "Asavie hardware SIMs information JSON could not be parsed: " + e.Message,
-                                                                       "",
-                                                                       "",
-                                                                       "");
+                    #endregion
+
+
+                    #region HTTPStatusCode.OK
+
+                    if (httpresponse?.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        // HTTP/1.1 200 OK
+                        // Cache-Control:    no-cache
+                        // Pragma:           no-cache
+                        // Content-Length:   658
+                        // Content-Type:     application/json;charset=UTF-8
+                        // Expires:          -1
+                        // Request-Context:  appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                        // Date:             Mon, 16 Jul 2018 21:10:29 GMT
+                        // 
+                        // {
+                        //   "Data":               [{ ... }, { ... }],
+                        //   "Success":            true,
+                        //   "Code":               200,
+                        //   "ErrorCode":          0,
+                        //   "ErrorSubCode":       0,
+                        //   "ErrorDescription":   "",
+                        //   "Meta":               "",
+                        //   "StatusUrl":          null,
+                        //   "ContinuationToken":  ""
+                        // }
+
+                        try
+                        {
+
+                            if (APIResult<IEnumerable<HardwareSIM>>.TryParse(httpresponse,
+                                                                             out APIResult<IEnumerable<HardwareSIM>> Result,
+                                                                             JSONObj =>
+                                                                             {
+
+                                                                                 if (!JSONObj.ParseMandatory("Data",
+                                                                                                             "hardware SIMs information",
+                                                                                                             out JArray ArrayOfSIMs,
+                                                                                                             out ErrorResponse))
+                                                                                 {
+                                                                                     throw new Exception(ErrorResponse);
+                                                                                 }
+
+                                                                                 var ListOfSIMs = new List<HardwareSIM>();
+
+                                                                                 foreach (var jToken in ArrayOfSIMs)
+                                                                                 {
+
+                                                                                     if (jToken is JObject jObject &&
+                                                                                         HardwareSIM.TryParseAsavie(jObject, out HardwareSIM hardwareSIM))
+                                                                                     {
+                                                                                         ListOfSIMs.Add(hardwareSIM);
+                                                                                     }
+
+                                                                                     else
+                                                                                         throw new Exception("Could not parse '" + jToken + "' as HardwareSIM information!");
+
+                                                                                 }
+
+                                                                                 return ListOfSIMs;
+
+                                                                             }))
+                            {
+                                return Result;
+                            }
+
+                            ErrorResponse = "Asavie hardware SIMs information JSON could not be parsed!";
+
+                        }
+                        catch (Exception e)
+                        {
+                            ErrorResponse = "Asavie hardware SIMs information JSON could not be parsed: " + e.Message;
+                        }
 
                     }
 
-                }
+                    #endregion
 
-                #endregion
+                    #region HTTPStatusCode.Unauthorized
 
-                return new APIResult<IEnumerable<HardwareSIM>>(false,
-                                                               0,
-                                                               0,
-                                                               0,
-                                                               httpresponse.HTTPStatusCode.ToString(),
-                                                               "",
-                                                               "",
-                                                               "");
+                    // HTTP/1.1 401 Unauthorized
+                    // Cache-Control: no-cache
+                    // Pragma: no-cache
+                    // Content-Length: 61
+                    // Content-Type: application/json; charset=utf-8
+                    // Expires: -1
+                    // WWW-Authenticate: Bearer
+                    // Request-Context: appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                    // Date: Fri, 28 Sep 2018 01:41:50 GMT
+                    // 
+                    // {"Message":"Authorization has been denied for this request."}
+
+                    if (httpresponse?.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+                        CurrentAccessToken = await NewAuthToken();
+                    }
+
+                    #endregion
+
+                    retry++;
+
+                } while (retry < 5);
+
+                if (ErrorResponse != null)
+                    ErrorResponse = httpresponse.HTTPStatusCode.ToString();
 
             }
 
             catch (Exception e)
             {
-
-                return new APIResult<IEnumerable<HardwareSIM>>(false,
-                                                               0,
-                                                               0,
-                                                               0,
-                                                               e.Message,
-                                                               "",
-                                                               "",
-                                                               "");
-
+                ErrorResponse = "Querying Asavie hardware SIMs information failed: " + e.Message;
             }
 
+            return new APIResult<IEnumerable<HardwareSIM>>(false,
+                                                           0,
+                                                           0,
+                                                           0,
+                                                           ErrorResponse,
+                                                           "",
+                                                           "",
+                                                           "");
         }
 
         #endregion
