@@ -30,11 +30,11 @@ namespace com.GraphDefined.Asavie.API
 {
 
     /// <summary>
-    /// Information about the APNs of devices.
+    /// Information about the IOT devices.
     /// </summary>
-    public class DevicesAPN : IEquatable<DevicesAPN>,
-                              IComparable<DevicesAPN>,
-                              IComparable
+    public class IOTDevice : IEquatable<IOTDevice>,
+                             IComparable<IOTDevice>,
+                             IComparable
     {
 
         #region Properties
@@ -64,26 +64,26 @@ namespace com.GraphDefined.Asavie.API
 
         #region Constructor(s)
 
-        public DevicesAPN(CLI              CLI,
-                          SIM_Id?          SIMNumber,
-                          String           SOC,
-                          String           InternalSOC,
-                          String           Description,
-                          IIPAddress       IPAddress,
-                          DateTime?        StartDate,
-                          DateTime?        EndDate,
-                          String           FriendlyName,
-                          String           Hints,
-                          String           ProvisioningMetaData,
-                          Byte?            Status,
-                          Byte?            Version,
-                          Byte?            ActorStatus,
-                          Byte?            NetworkStatus,
-                          Boolean?         Enabled,
-                          Boolean?         LockIMEI,
-                          String           IMEI,
-                          DateTime?        LastSync,
-                          Last_Connected?  LastConnected_Start)
+        public IOTDevice(CLI              CLI,
+                         SIM_Id?          SIMNumber,
+                         String           SOC,
+                         String           InternalSOC,
+                         String           Description,
+                         IIPAddress       IPAddress,
+                         DateTime?        StartDate,
+                         DateTime?        EndDate,
+                         String           FriendlyName,
+                         String           Hints,
+                         String           ProvisioningMetaData,
+                         Byte?            Status,
+                         Byte?            Version,
+                         Byte?            ActorStatus,
+                         Byte?            NetworkStatus,
+                         Boolean?         Enabled,
+                         Boolean?         LockIMEI,
+                         String           IMEI,
+                         DateTime?        LastSync,
+                         Last_Connected?  LastConnected_Start)
         {
 
             this.CLI                   = CLI;
@@ -112,14 +112,14 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region TryParseAsavie(JSON, out DevicesAPN)
+        #region TryParseAsavie(JSON, out IOTDevice)
 
-        public static Boolean TryParseAsavie(JObject JSON, out DevicesAPN DevicesAPN)
+        public static Boolean TryParseAsavie(JObject JSON, out IOTDevice IOTDevice)
         {
 
             #region Documentation
 
-            // GetDevicesAPNs:
+            // GetIOTDevices:
             // {
             //    "CLI":                    "204043729927975",
             //    "SIMNumber":              "89314404000132906315",
@@ -165,35 +165,35 @@ namespace com.GraphDefined.Asavie.API
 
                 }
 
-                DevicesAPN  = new DevicesAPN(CLI.   Parse(JSON["CLI"      ].Value<String>()),
-                                             JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                 ? new SIM_Id?(SIM_Id.Parse(JSON["SIMNumber"].Value<String>()))
-                                                 : null,
-                                             JSON["SOC"                 ]?.Value<String>(),
-                                             JSON["InternalSOC"         ]?.Value<String>(),
-                                             JSON["Description"         ]?.Value<String>(),
-                                             JSON["IPAddress"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                 ? org.GraphDefined.Vanaheimr.Hermod.IPAddress.Parse(JSON["IPAddress"]?.Value<String>())
-                                                 : null,
-                                             JSON["StartDate"           ]?.Value<DateTime>(),
-                                             EndDate,
-                                             JSON["FriendlyName"        ]?.Value<String>(),
-                                             JSON["Hints"               ]?.Value<String>(),
-                                             JSON["ProvisioningMetaData"]?.Value<String>(),
-                                             JSON["Status"              ]?.Value<Byte>(),
-                                             JSON["Version"             ]?.Value<Byte>(),
-                                             JSON["ActorStatus"         ]?.Value<Byte>(),
-                                             JSON["NetworkStatus"       ]?.Value<Byte>(),
-                                             JSON["Enabled"             ]?.Value<Boolean>(),
-                                             JSON["LockIMEI"            ]?.Value<Boolean>(),
-                                             JSON["IMEI"                ]?.Value<String>(),
-                                             JSON["LastSync"            ]?.Value<DateTime>(),
-                                             JSON["LastConnected_Start"] is JObject
-                                                 ? new Last_Connected?(new Last_Connected(JSON["LastConnected_Start"]. Value<DateTime>(),
-                                                                                          EndDate,
-                                                                                          JSON["LastConnected_MCC"  ]?.Value<String>(),
-                                                                                          JSON["LastConnected_MNC"  ]?.Value<String>()))
-                                                 : null);
+                IOTDevice  = new IOTDevice(CLI.   Parse(JSON["CLI"      ].Value<String>()),
+                                           JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
+                                               ? new SIM_Id?(SIM_Id.Parse(JSON["SIMNumber"].Value<String>()))
+                                               : null,
+                                           JSON["SOC"                 ]?.Value<String>(),
+                                           JSON["InternalSOC"         ]?.Value<String>(),
+                                           JSON["Description"         ]?.Value<String>(),
+                                           JSON["IPAddress"]?.Value<String>().IsNotNullOrEmpty() == true
+                                               ? org.GraphDefined.Vanaheimr.Hermod.IPAddress.Parse(JSON["IPAddress"]?.Value<String>())
+                                               : null,
+                                           JSON["StartDate"           ]?.Value<DateTime>(),
+                                           EndDate,
+                                           JSON["FriendlyName"        ]?.Value<String>(),
+                                           JSON["Hints"               ]?.Value<String>(),
+                                           JSON["ProvisioningMetaData"]?.Value<String>(),
+                                           JSON["Status"              ]?.Value<Byte>(),
+                                           JSON["Version"             ]?.Value<Byte>(),
+                                           JSON["ActorStatus"         ]?.Value<Byte>(),
+                                           JSON["NetworkStatus"       ]?.Value<Byte>(),
+                                           JSON["Enabled"             ]?.Value<Boolean>(),
+                                           JSON["LockIMEI"            ]?.Value<Boolean>(),
+                                           JSON["IMEI"                ]?.Value<String>(),
+                                           JSON["LastSync"            ]?.Value<DateTime>(),
+                                           JSON["LastConnected_Start"] is JObject
+                                               ? new Last_Connected?(new Last_Connected(JSON["LastConnected_Start"]. Value<DateTime>(),
+                                                                                        EndDate,
+                                                                                        JSON["LastConnected_MCC"  ]?.Value<String>(),
+                                                                                        JSON["LastConnected_MNC"  ]?.Value<String>()))
+                                               : null);
 
                 return true;
 
@@ -201,45 +201,45 @@ namespace com.GraphDefined.Asavie.API
             catch (Exception)
             { }
 
-            DevicesAPN = null;
+            IOTDevice = null;
             return false;
 
         }
 
         #endregion
 
-        #region TryParse      (JSON, out DevicesAPN)
+        #region TryParse      (JSON, out IOTDevice)
 
-        public static Boolean TryParse(JObject JSON, out DevicesAPN DevicesAPN)
+        public static Boolean TryParse(JObject JSON, out IOTDevice IOTDevice)
         {
 
             try
             {
 
-                DevicesAPN  = new DevicesAPN(CLI.   Parse(JSON["CLI"      ].Value<String>()),
-                                             JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                 ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
-                                                 : default,
-                                             JSON["SOC"                 ]?.Value<String>(),
-                                             JSON["internalSOC"         ]?.Value<String>(),
-                                             JSON["description"         ]?.Value<String>(),
-                                             JSON["IPAddress"]?.Value<String>().IsNotNullOrEmpty() == true
-                                                 ? org.GraphDefined.Vanaheimr.Hermod.IPAddress.Parse(JSON["IPAddress"]?.Value<String>())
-                                                 : default,
-                                             JSON["startDate"           ]?.Value<DateTime>(),
-                                             JSON["endDate"             ]?.Value<DateTime>(),
-                                             JSON["friendlyName"        ]?.Value<String>(),
-                                             JSON["hints"               ]?.Value<String>(),
-                                             JSON["provisioningMetaData"]?.Value<String>(),
-                                             JSON["status"              ]?.Value<Byte>(),
-                                             JSON["version"             ]?.Value<Byte>(),
-                                             JSON["actorStatus"         ]?.Value<Byte>(),
-                                             JSON["networkStatus"       ]?.Value<Byte>(),
-                                             JSON["enabled"             ]?.Value<Boolean>(),
-                                             JSON["lockIMEI"            ]?.Value<Boolean>(),
-                                             JSON["IMEI"                ]?.Value<String>(),
-                                             JSON["lastSync"            ]?.Value<DateTime>(),
-                                             JSON["lastConnected"] != null ? Last_Connected.Parse(JSON["lastConnected"] as JObject) : default(Last_Connected?));
+                IOTDevice  = new IOTDevice(CLI.   Parse(JSON["CLI"      ].Value<String>()),
+                                           JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
+                                               ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
+                                               : default,
+                                           JSON["SOC"                 ]?.Value<String>(),
+                                           JSON["internalSOC"         ]?.Value<String>(),
+                                           JSON["description"         ]?.Value<String>(),
+                                           JSON["IPAddress"]?.Value<String>().IsNotNullOrEmpty() == true
+                                               ? org.GraphDefined.Vanaheimr.Hermod.IPAddress.Parse(JSON["IPAddress"]?.Value<String>())
+                                               : default,
+                                           JSON["startDate"           ]?.Value<DateTime>(),
+                                           JSON["endDate"             ]?.Value<DateTime>(),
+                                           JSON["friendlyName"        ]?.Value<String>(),
+                                           JSON["hints"               ]?.Value<String>(),
+                                           JSON["provisioningMetaData"]?.Value<String>(),
+                                           JSON["status"              ]?.Value<Byte>(),
+                                           JSON["version"             ]?.Value<Byte>(),
+                                           JSON["actorStatus"         ]?.Value<Byte>(),
+                                           JSON["networkStatus"       ]?.Value<Byte>(),
+                                           JSON["enabled"             ]?.Value<Boolean>(),
+                                           JSON["lockIMEI"            ]?.Value<Boolean>(),
+                                           JSON["IMEI"                ]?.Value<String>(),
+                                           JSON["lastSync"            ]?.Value<DateTime>(),
+                                           JSON["lastConnected"] != null ? Last_Connected.Parse(JSON["lastConnected"] as JObject) : default(Last_Connected?));
 
                 return true;
 
@@ -247,7 +247,7 @@ namespace com.GraphDefined.Asavie.API
             catch (Exception)
             { }
 
-            DevicesAPN = null;
+            IOTDevice = null;
             return false;
 
         }
@@ -341,113 +341,113 @@ namespace com.GraphDefined.Asavie.API
 
         #region Operator overloading
 
-        #region Operator == (DevicesAPN1, DevicesAPN2)
+        #region Operator == (IOTDevice1, IOTDevice2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN1">A communicator identification.</param>
-        /// <param name="DevicesAPN2">Another communicator identification.</param>
+        /// <param name="IOTDevice1">A communicator identification.</param>
+        /// <param name="IOTDevice2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (DevicesAPN DevicesAPN1, DevicesAPN DevicesAPN2)
+        public static Boolean operator == (IOTDevice IOTDevice1, IOTDevice IOTDevice2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(DevicesAPN1, DevicesAPN2))
+            if (Object.ReferenceEquals(IOTDevice1, IOTDevice2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) DevicesAPN1 == null) || ((Object) DevicesAPN2 == null))
+            if (((Object) IOTDevice1 == null) || ((Object) IOTDevice2 == null))
                 return false;
 
-            return DevicesAPN1.Equals(DevicesAPN2);
+            return IOTDevice1.Equals(IOTDevice2);
 
         }
 
         #endregion
 
-        #region Operator != (DevicesAPN1, DevicesAPN2)
+        #region Operator != (IOTDevice1, IOTDevice2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN1">A communicator identification.</param>
-        /// <param name="DevicesAPN2">Another communicator identification.</param>
+        /// <param name="IOTDevice1">A communicator identification.</param>
+        /// <param name="IOTDevice2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (DevicesAPN DevicesAPN1, DevicesAPN DevicesAPN2)
-            => !(DevicesAPN1 == DevicesAPN2);
+        public static Boolean operator != (IOTDevice IOTDevice1, IOTDevice IOTDevice2)
+            => !(IOTDevice1 == IOTDevice2);
 
         #endregion
 
-        #region Operator <  (DevicesAPN1, DevicesAPN2)
+        #region Operator <  (IOTDevice1, IOTDevice2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN1">A communicator identification.</param>
-        /// <param name="DevicesAPN2">Another communicator identification.</param>
+        /// <param name="IOTDevice1">A communicator identification.</param>
+        /// <param name="IOTDevice2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (DevicesAPN DevicesAPN1, DevicesAPN DevicesAPN2)
+        public static Boolean operator < (IOTDevice IOTDevice1, IOTDevice IOTDevice2)
         {
 
-            if ((Object) DevicesAPN1 == null)
-                throw new ArgumentNullException(nameof(DevicesAPN1), "The given DevicesAPN1 must not be null!");
+            if ((Object) IOTDevice1 == null)
+                throw new ArgumentNullException(nameof(IOTDevice1), "The given IOTDevice1 must not be null!");
 
-            return DevicesAPN1.CompareTo(DevicesAPN2) < 0;
+            return IOTDevice1.CompareTo(IOTDevice2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (DevicesAPN1, DevicesAPN2)
+        #region Operator <= (IOTDevice1, IOTDevice2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN1">A communicator identification.</param>
-        /// <param name="DevicesAPN2">Another communicator identification.</param>
+        /// <param name="IOTDevice1">A communicator identification.</param>
+        /// <param name="IOTDevice2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (DevicesAPN DevicesAPN1, DevicesAPN DevicesAPN2)
-            => !(DevicesAPN1 > DevicesAPN2);
+        public static Boolean operator <= (IOTDevice IOTDevice1, IOTDevice IOTDevice2)
+            => !(IOTDevice1 > IOTDevice2);
 
         #endregion
 
-        #region Operator >  (DevicesAPN1, DevicesAPN2)
+        #region Operator >  (IOTDevice1, IOTDevice2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN1">A communicator identification.</param>
-        /// <param name="DevicesAPN2">Another communicator identification.</param>
+        /// <param name="IOTDevice1">A communicator identification.</param>
+        /// <param name="IOTDevice2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (DevicesAPN DevicesAPN1, DevicesAPN DevicesAPN2)
+        public static Boolean operator > (IOTDevice IOTDevice1, IOTDevice IOTDevice2)
         {
 
-            if ((Object) DevicesAPN1 == null)
-                throw new ArgumentNullException(nameof(DevicesAPN1), "The given DevicesAPN1 must not be null!");
+            if ((Object) IOTDevice1 == null)
+                throw new ArgumentNullException(nameof(IOTDevice1), "The given IOTDevice1 must not be null!");
 
-            return DevicesAPN1.CompareTo(DevicesAPN2) > 0;
+            return IOTDevice1.CompareTo(IOTDevice2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (DevicesAPN1, DevicesAPN2)
+        #region Operator >= (IOTDevice1, IOTDevice2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN1">A communicator identification.</param>
-        /// <param name="DevicesAPN2">Another communicator identification.</param>
+        /// <param name="IOTDevice1">A communicator identification.</param>
+        /// <param name="IOTDevice2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (DevicesAPN DevicesAPN1, DevicesAPN DevicesAPN2)
-            => !(DevicesAPN1 < DevicesAPN2);
+        public static Boolean operator >= (IOTDevice IOTDevice1, IOTDevice IOTDevice2)
+            => !(IOTDevice1 < IOTDevice2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<DevicesAPN> Members
+        #region IComparable<IOTDevice> Members
 
         #region CompareTo(Object)
 
@@ -461,28 +461,28 @@ namespace com.GraphDefined.Asavie.API
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            if (!(Object is DevicesAPN DevicesAPN))
+            if (!(Object is IOTDevice IOTDevice))
                 throw new ArgumentException("The given object is not an communicator!");
 
-            return CompareTo(DevicesAPN);
+            return CompareTo(IOTDevice);
 
         }
 
         #endregion
 
-        #region CompareTo(DevicesAPN)
+        #region CompareTo(IOTDevice)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="DevicesAPN">An communicator object to compare with.</param>
-        public Int32 CompareTo(DevicesAPN DevicesAPN)
+        /// <param name="IOTDevice">An communicator object to compare with.</param>
+        public Int32 CompareTo(IOTDevice IOTDevice)
         {
 
-            if ((Object) DevicesAPN == null)
-                throw new ArgumentNullException(nameof(DevicesAPN), "The given communicator must not be null!");
+            if ((Object) IOTDevice == null)
+                throw new ArgumentNullException(nameof(IOTDevice), "The given communicator must not be null!");
 
-            return CLI.CompareTo(DevicesAPN.CLI);
+            return CLI.CompareTo(IOTDevice.CLI);
 
         }
 
@@ -490,7 +490,7 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region IEquatable<DevicesAPN> Members
+        #region IEquatable<IOTDevice> Members
 
         #region Equals(Object)
 
@@ -505,30 +505,30 @@ namespace com.GraphDefined.Asavie.API
             if (Object == null)
                 return false;
 
-            var DevicesAPN = Object as DevicesAPN;
-            if (DevicesAPN is null)
+            var IOTDevice = Object as IOTDevice;
+            if (IOTDevice is null)
                 return false;
 
-            return Equals(DevicesAPN);
+            return Equals(IOTDevice);
 
         }
 
         #endregion
 
-        #region Equals(DevicesAPN)
+        #region Equals(IOTDevice)
 
         /// <summary>
         /// Compares two communicators for equality.
         /// </summary>
-        /// <param name="DevicesAPN">An communicator to compare with.</param>
+        /// <param name="IOTDevice">An communicator to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(DevicesAPN DevicesAPN)
+        public Boolean Equals(IOTDevice IOTDevice)
         {
 
-            if ((Object) DevicesAPN == null)
+            if ((Object) IOTDevice == null)
                 return false;
 
-            return CLI.Equals(DevicesAPN.CLI);
+            return CLI.Equals(IOTDevice.CLI);
 
         }
 

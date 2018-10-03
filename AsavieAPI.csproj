@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Complex\IOTDevice.cs" />
+    <Compile Include="Data\Device_Id.cs" />
     <Compile Include="Data\Network_Id.cs" />
     <Compile Include="Data\Account_Id.cs" />
     <Compile Include="Data\AuthToken.cs" />
@@ -58,8 +60,8 @@
     <Compile Include="Data\SIM_Id.cs" />
     <Compile Include="Data\SimCardStates.cs" />
     <Compile Include="Data\Complex\LastConnected.cs" />
-    <Compile Include="Data\Complex\DevicesAPN.cs" />
-    <Compile Include="Data\Complex\HardwareSIM.cs" />
+    <Compile Include="Data\Complex\APNDevice.cs" />
+    <Compile Include="Data\Complex\SIMHardware.cs" />
     <Compile Include="AsavieAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

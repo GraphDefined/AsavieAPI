@@ -29,10 +29,10 @@ namespace com.GraphDefined.Asavie.API
 {
 
     /// <summary>
-    /// Information about the SIM hardware.
+    /// Information about a SIM card.
     /// </summary>
-    public class HardwareSIM : IEquatable<HardwareSIM>,
-                               IComparable<HardwareSIM>,
+    public class SIMHardware : IEquatable<SIMHardware>,
+                               IComparable<SIMHardware>,
                                IComparable
     {
 
@@ -64,7 +64,7 @@ namespace com.GraphDefined.Asavie.API
 
         #region Constructor(s)
 
-        public HardwareSIM(CLI            CLI,
+        public SIMHardware(CLI            CLI,
                            SIM_Id?        SIMNumber,
                            String         Description,
                            String         InventoryRef,
@@ -114,14 +114,14 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
-        #region TryParseAsavie(JSON, out HardwareSIM)
+        #region TryParseAsavie(JSON, out SIMHardware)
 
-        public static Boolean TryParseAsavie(JObject JSON, out HardwareSIM HardwareSIM)
+        public static Boolean TryParseAsavie(JObject JSON, out SIMHardware SIMHardware)
         {
 
             #region Documentation
 
-            // GetHardwareSIMs:
+            // GetSIMHardwares:
             // {
             //    "CLI":                    "204043729xxxxxx",
             //    "SIMNumber":              "89314404000132xxxxxx",
@@ -164,7 +164,7 @@ namespace com.GraphDefined.Asavie.API
                     ProviderPrice = null;
 
 
-                HardwareSIM  = new HardwareSIM(CLI.   Parse(JSON["CLI"      ].Value<String>()),
+                SIMHardware  = new SIMHardware(CLI.   Parse(JSON["CLI"      ].Value<String>()),
                                                JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
                                                    ? SIM_Id.Parse(JSON["SIMNumber"].Value<String>())
                                                    : default,
@@ -198,22 +198,22 @@ namespace com.GraphDefined.Asavie.API
             catch (Exception)
             { }
 
-            HardwareSIM = null;
+            SIMHardware = null;
             return false;
 
         }
 
         #endregion
 
-        #region TryParse      (JSON, out HardwareSIM)
+        #region TryParse      (JSON, out SIMHardware)
 
-        public static Boolean TryParse(JObject JSON, out HardwareSIM HardwareSIM)
+        public static Boolean TryParse(JObject JSON, out SIMHardware SIMHardware)
         {
 
             try
             {
 
-                HardwareSIM  = new HardwareSIM(CLI.   Parse(JSON["CLI"      ].Value<String>()),
+                SIMHardware  = new SIMHardware(CLI.   Parse(JSON["CLI"      ].Value<String>()),
                                                JSON["SIMNumber"]?.Value<String>().IsNotNullOrEmpty() == true
                                                    ? new SIM_Id?(SIM_Id.Parse(JSON["SIMNumber"].Value<String>()))
                                                    : null,
@@ -247,7 +247,7 @@ namespace com.GraphDefined.Asavie.API
             catch (Exception)
             { }
 
-            HardwareSIM = null;
+            SIMHardware = null;
             return false;
 
         }
@@ -345,113 +345,113 @@ namespace com.GraphDefined.Asavie.API
 
         #region Operator overloading
 
-        #region Operator == (HardwareSIM1, HardwareSIM2)
+        #region Operator == (SIMHardware1, SIMHardware2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM1">A communicator identification.</param>
-        /// <param name="HardwareSIM2">Another communicator identification.</param>
+        /// <param name="SIMHardware1">A communicator identification.</param>
+        /// <param name="SIMHardware2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (HardwareSIM HardwareSIM1, HardwareSIM HardwareSIM2)
+        public static Boolean operator == (SIMHardware SIMHardware1, SIMHardware SIMHardware2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(HardwareSIM1, HardwareSIM2))
+            if (Object.ReferenceEquals(SIMHardware1, SIMHardware2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (((Object) HardwareSIM1 == null) || ((Object) HardwareSIM2 == null))
+            if (((Object) SIMHardware1 == null) || ((Object) SIMHardware2 == null))
                 return false;
 
-            return HardwareSIM1.Equals(HardwareSIM2);
+            return SIMHardware1.Equals(SIMHardware2);
 
         }
 
         #endregion
 
-        #region Operator != (HardwareSIM1, HardwareSIM2)
+        #region Operator != (SIMHardware1, SIMHardware2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM1">A communicator identification.</param>
-        /// <param name="HardwareSIM2">Another communicator identification.</param>
+        /// <param name="SIMHardware1">A communicator identification.</param>
+        /// <param name="SIMHardware2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (HardwareSIM HardwareSIM1, HardwareSIM HardwareSIM2)
-            => !(HardwareSIM1 == HardwareSIM2);
+        public static Boolean operator != (SIMHardware SIMHardware1, SIMHardware SIMHardware2)
+            => !(SIMHardware1 == SIMHardware2);
 
         #endregion
 
-        #region Operator <  (HardwareSIM1, HardwareSIM2)
+        #region Operator <  (SIMHardware1, SIMHardware2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM1">A communicator identification.</param>
-        /// <param name="HardwareSIM2">Another communicator identification.</param>
+        /// <param name="SIMHardware1">A communicator identification.</param>
+        /// <param name="SIMHardware2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (HardwareSIM HardwareSIM1, HardwareSIM HardwareSIM2)
+        public static Boolean operator < (SIMHardware SIMHardware1, SIMHardware SIMHardware2)
         {
 
-            if ((Object) HardwareSIM1 == null)
-                throw new ArgumentNullException(nameof(HardwareSIM1), "The given HardwareSIM1 must not be null!");
+            if ((Object) SIMHardware1 == null)
+                throw new ArgumentNullException(nameof(SIMHardware1), "The given SIMHardware1 must not be null!");
 
-            return HardwareSIM1.CompareTo(HardwareSIM2) < 0;
+            return SIMHardware1.CompareTo(SIMHardware2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (HardwareSIM1, HardwareSIM2)
+        #region Operator <= (SIMHardware1, SIMHardware2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM1">A communicator identification.</param>
-        /// <param name="HardwareSIM2">Another communicator identification.</param>
+        /// <param name="SIMHardware1">A communicator identification.</param>
+        /// <param name="SIMHardware2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (HardwareSIM HardwareSIM1, HardwareSIM HardwareSIM2)
-            => !(HardwareSIM1 > HardwareSIM2);
+        public static Boolean operator <= (SIMHardware SIMHardware1, SIMHardware SIMHardware2)
+            => !(SIMHardware1 > SIMHardware2);
 
         #endregion
 
-        #region Operator >  (HardwareSIM1, HardwareSIM2)
+        #region Operator >  (SIMHardware1, SIMHardware2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM1">A communicator identification.</param>
-        /// <param name="HardwareSIM2">Another communicator identification.</param>
+        /// <param name="SIMHardware1">A communicator identification.</param>
+        /// <param name="SIMHardware2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (HardwareSIM HardwareSIM1, HardwareSIM HardwareSIM2)
+        public static Boolean operator > (SIMHardware SIMHardware1, SIMHardware SIMHardware2)
         {
 
-            if ((Object) HardwareSIM1 == null)
-                throw new ArgumentNullException(nameof(HardwareSIM1), "The given HardwareSIM1 must not be null!");
+            if ((Object) SIMHardware1 == null)
+                throw new ArgumentNullException(nameof(SIMHardware1), "The given SIMHardware1 must not be null!");
 
-            return HardwareSIM1.CompareTo(HardwareSIM2) > 0;
+            return SIMHardware1.CompareTo(SIMHardware2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (HardwareSIM1, HardwareSIM2)
+        #region Operator >= (SIMHardware1, SIMHardware2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM1">A communicator identification.</param>
-        /// <param name="HardwareSIM2">Another communicator identification.</param>
+        /// <param name="SIMHardware1">A communicator identification.</param>
+        /// <param name="SIMHardware2">Another communicator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (HardwareSIM HardwareSIM1, HardwareSIM HardwareSIM2)
-            => !(HardwareSIM1 < HardwareSIM2);
+        public static Boolean operator >= (SIMHardware SIMHardware1, SIMHardware SIMHardware2)
+            => !(SIMHardware1 < SIMHardware2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<HardwareSIM> Members
+        #region IComparable<SIMHardware> Members
 
         #region CompareTo(Object)
 
@@ -465,28 +465,28 @@ namespace com.GraphDefined.Asavie.API
             if (Object == null)
                 throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
 
-            if (!(Object is HardwareSIM HardwareSIM))
+            if (!(Object is SIMHardware SIMHardware))
                 throw new ArgumentException("The given object is not an communicator!");
 
-            return CompareTo(HardwareSIM);
+            return CompareTo(SIMHardware);
 
         }
 
         #endregion
 
-        #region CompareTo(HardwareSIM)
+        #region CompareTo(SIMHardware)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="HardwareSIM">An communicator object to compare with.</param>
-        public Int32 CompareTo(HardwareSIM HardwareSIM)
+        /// <param name="SIMHardware">An communicator object to compare with.</param>
+        public Int32 CompareTo(SIMHardware SIMHardware)
         {
 
-            if ((Object) HardwareSIM == null)
-                throw new ArgumentNullException(nameof(HardwareSIM), "The given communicator must not be null!");
+            if ((Object) SIMHardware == null)
+                throw new ArgumentNullException(nameof(SIMHardware), "The given communicator must not be null!");
 
-            return CLI.CompareTo(HardwareSIM.CLI);
+            return CLI.CompareTo(SIMHardware.CLI);
 
         }
 
@@ -494,7 +494,7 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
-        #region IEquatable<HardwareSIM> Members
+        #region IEquatable<SIMHardware> Members
 
         #region Equals(Object)
 
@@ -509,30 +509,30 @@ namespace com.GraphDefined.Asavie.API
             if (Object == null)
                 return false;
 
-            var HardwareSIM = Object as HardwareSIM;
-            if (HardwareSIM is null)
+            var SIMHardware = Object as SIMHardware;
+            if (SIMHardware is null)
                 return false;
 
-            return Equals(HardwareSIM);
+            return Equals(SIMHardware);
 
         }
 
         #endregion
 
-        #region Equals(HardwareSIM)
+        #region Equals(SIMHardware)
 
         /// <summary>
         /// Compares two communicators for equality.
         /// </summary>
-        /// <param name="HardwareSIM">An communicator to compare with.</param>
+        /// <param name="SIMHardware">An communicator to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(HardwareSIM HardwareSIM)
+        public Boolean Equals(SIMHardware SIMHardware)
         {
 
-            if ((Object) HardwareSIM == null)
+            if ((Object) SIMHardware == null)
                 return false;
 
-            return CLI.Equals(HardwareSIM.CLI);
+            return CLI.Equals(SIMHardware.CLI);
 
         }
 
