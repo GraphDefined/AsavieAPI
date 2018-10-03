@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsavieAPIClientLogger.cs" />
     <Compile Include="Data\Complex\IOTDevice.cs" />
     <Compile Include="Data\Device_Id.cs" />
     <Compile Include="Data\Network_Id.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="Data\Complex\LastConnected.cs" />
     <Compile Include="Data\Complex\APNDevice.cs" />
     <Compile Include="Data\Complex\SIMHardware.cs" />
-    <Compile Include="AsavieAPI.cs" />
+    <Compile Include="AsavieAPIClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
