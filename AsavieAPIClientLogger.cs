@@ -169,7 +169,7 @@ namespace com.GraphDefined.Asavie.API
 
             #endregion
 
-            #region SetHardwareSIMState
+            #region SIMHardware
 
             RegisterEvent("SetSIMHardwareStateRequest",
                           handler => AsavieAPIClient.OnSetSIMHardwareStateRequest += handler,
