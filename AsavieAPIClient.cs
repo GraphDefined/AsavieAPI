@@ -42,6 +42,8 @@ namespace com.GraphDefined.Asavie.API
     public partial class AsavieAPIClient : IHTTPClient
     {
 
+        // https://clients.txtnation.com/hc/en-us/articles/218719768-MCCMNC-mobile-country-code-and-mobile-network-code-list-
+
         #region Data
 
         /// <summary>
