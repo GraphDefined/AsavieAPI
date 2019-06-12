@@ -216,7 +216,7 @@ namespace com.GraphDefined.Asavie.API
                                                        RemotePort:  RemotePort,
                                                        DNSClient:   DNSClient ?? this.DNSClient).
 
-                                           Execute(client => client.POST(HTTPURI.Parse("/v1/authtoken"),
+                                           Execute(client => client.POST(HTTPPath.Parse("/v1/authtoken"),
 
                                                                          requestbuilder => {
                                                                              requestbuilder.Host         = VirtualHostname ?? Hostname;
@@ -345,7 +345,7 @@ namespace com.GraphDefined.Asavie.API
                                                          RemotePort:  RemotePort,
                                                          DNSClient:   DNSClient ?? this.DNSClient).
 
-                                           Execute(client => client.GET(HTTPURI.Parse("/v1/version"),
+                                           Execute(client => client.GET(HTTPPath.Parse("/v1/version"),
 
                                                                         requestbuilder => {
                                                                             requestbuilder.Host           = VirtualHostname ?? Hostname;
@@ -489,7 +489,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                                 Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName),
+                                                 Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName),
 
                                                                               requestbuilder => {
                                                                                   requestbuilder.Host           = VirtualHostname ?? Hostname;
@@ -669,7 +669,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                                 Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/networks"),
+                                                 Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName + "/networks"),
 
                                                                               requestbuilder => {
                                                                                   requestbuilder.Host           = VirtualHostname ?? Hostname;
@@ -880,7 +880,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                                 Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims" + (Refresh ? "?refresh=true" : "")),
+                                                 Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName + "/hardware/sims" + (Refresh ? "?refresh=true" : "")),
 
                                                                               requestbuilder => {
                                                                                   requestbuilder.Host          = VirtualHostname ?? Hostname;
@@ -1078,7 +1078,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI + (Refresh ? "?refresh=true" : "")),
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI + (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
                                                                                 requestbuilder.Host           = VirtualHostname ?? Hostname;
@@ -1467,7 +1467,7 @@ namespace com.GraphDefined.Asavie.API
                                                          RemotePort:  RemotePort,
                                                          DNSClient:   DNSClient ?? this.DNSClient).
 
-                                           Execute(client => client.PATCH(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI),
+                                           Execute(client => client.PATCH(HTTPPath.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI),
 
                                                                           requestbuilder => {
                                                                               requestbuilder.Host           = VirtualHostname ?? Hostname;
@@ -1737,7 +1737,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName +
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
                                                                                              "/networks/" + NetworkName +
                                                                                              "/devices/apns" +
                                                                                              (Refresh ? "?refresh=true" : "")),
@@ -1953,7 +1953,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName +
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
                                                                                              "/networks/" + NetworkName +
                                                                                              "/devices/apns/" + CLI +
                                                                                              (Refresh ? "?refresh=true" : "")),
@@ -2226,7 +2226,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName +
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
                                                                                              "/networks/" + NetworkName +
                                                                                              "/devices/iots" +
                                                                                              (Refresh ? "?refresh=true" : "")),
@@ -2442,7 +2442,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName +
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
                                                                                              "/networks/" + NetworkName +
                                                                                              "/devices/iots/" + DeviceId +
                                                                                              (Refresh ? "?refresh=true" : "")),
@@ -2655,7 +2655,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName +
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
                                                                                              "/networks/" + NetworkName +
                                                                                              "/analytics/clientsessions" + Filter.Replace(" ", "%20")), //?from=01jul2016%2000:00&to=11jul2018%2000:00"),
 
@@ -2871,7 +2871,7 @@ namespace com.GraphDefined.Asavie.API
                                                              RemotePort:  RemotePort,
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
-                                               Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/logs"),
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName + "/logs"),
 
                                                                             requestbuilder => {
                                                                                 requestbuilder.Host           = VirtualHostname ?? Hostname;
