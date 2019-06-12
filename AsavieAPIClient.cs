@@ -93,7 +93,7 @@ namespace com.GraphDefined.Asavie.API
         /// <summary>
         /// The remote virtual hostname.
         /// </summary>
-        public String                               VirtualHostname               { get; }
+        public HTTPHostname?                        VirtualHostname               { get; }
 
         /// <summary>
         /// The remote HTTPS port.
@@ -159,7 +159,7 @@ namespace com.GraphDefined.Asavie.API
         public AsavieAPIClient(String                               Login,
                                String                               Password,
                                HTTPHostname?                        Hostname                     = null,
-                               String                               VirtualHostname              = null,
+                               HTTPHostname?                        VirtualHostname              = null,
                                IPPort?                              RemotePort                   = null,
                                RemoteCertificateValidationCallback  RemoteCertificateValidator   = null,
                                String                               UserAgent                    = DefaultUserAgent,
@@ -178,15 +178,12 @@ namespace com.GraphDefined.Asavie.API
                 throw new ArgumentNullException(nameof(Password),  "The given password must not be null or empty!");
 
             this.Hostname                    = Hostname                   ?? DefaultHostname;
-            this.VirtualHostname             = VirtualHostname?.Trim();
+            this.VirtualHostname             = VirtualHostname;
             this.RemotePort                  = RemotePort                 ?? DefaultRemotePort;
             this.RemoteCertificateValidator  = RemoteCertificateValidator ?? ((sender, certificate, chain, policyErrors) => true);
             this.UserAgent                   = UserAgent                  ?? DefaultUserAgent;
             this.RequestTimeout              = RequestTimeout             ?? DefaultRequestTimeout;
             this.DNSClient                   = DNSClient;
-
-            if (VirtualHostname.IsNullOrEmpty())
-                this.VirtualHostname  = this.Hostname.Name;
 
             if (DNSClient == null)
                 throw new ArgumentNullException(nameof(Hostname),  "The given DNS client must not be null or empty!");
@@ -222,7 +219,7 @@ namespace com.GraphDefined.Asavie.API
                                            Execute(client => client.POST(HTTPURI.Parse("/v1/authtoken"),
 
                                                                          requestbuilder => {
-                                                                             requestbuilder.Host         = HTTPHostname.Parse(VirtualHostname);
+                                                                             requestbuilder.Host         = VirtualHostname ?? Hostname;
                                                                              requestbuilder.ContentType  = HTTPContentType.XWWWFormUrlEncoded;
                                                                              requestbuilder.Content      = ("grant_type=client_credentials&client_id=" + Login + "&client_secret=" + Password).
                                                                                                                ToUTF8Bytes();
@@ -351,7 +348,7 @@ namespace com.GraphDefined.Asavie.API
                                            Execute(client => client.GET(HTTPURI.Parse("/v1/version"),
 
                                                                         requestbuilder => {
-                                                                            requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                            requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                             requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                             requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                             requestbuilder.UserAgent      = UserAgent;
@@ -495,7 +492,7 @@ namespace com.GraphDefined.Asavie.API
                                                  Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName),
 
                                                                               requestbuilder => {
-                                                                                  requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                  requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                   requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                   requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                   requestbuilder.UserAgent      = UserAgent;
@@ -675,7 +672,7 @@ namespace com.GraphDefined.Asavie.API
                                                  Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/networks"),
 
                                                                               requestbuilder => {
-                                                                                  requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                  requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                   requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                   requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                   requestbuilder.UserAgent      = UserAgent;
@@ -886,7 +883,7 @@ namespace com.GraphDefined.Asavie.API
                                                  Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims" + (Refresh ? "?refresh=true" : "")),
 
                                                                               requestbuilder => {
-                                                                                  requestbuilder.Host          = HTTPHostname.Parse(VirtualHostname);
+                                                                                  requestbuilder.Host          = VirtualHostname ?? Hostname;
                                                                                   requestbuilder.Authorization = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                   requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                   requestbuilder.UserAgent      = UserAgent;
@@ -1084,7 +1081,7 @@ namespace com.GraphDefined.Asavie.API
                                                Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI + (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
@@ -1473,7 +1470,7 @@ namespace com.GraphDefined.Asavie.API
                                            Execute(client => client.PATCH(HTTPURI.Parse("/v1/accounts/" + AccountName + "/hardware/sims/" + CLI),
 
                                                                           requestbuilder => {
-                                                                              requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                              requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                               requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                               requestbuilder.ContentType    = HTTPContentType.JSON_UTF8;
                                                                               requestbuilder.Content        = JSONObject.Create(
@@ -1746,7 +1743,7 @@ namespace com.GraphDefined.Asavie.API
                                                                                              (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
@@ -1962,7 +1959,7 @@ namespace com.GraphDefined.Asavie.API
                                                                                              (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
@@ -2235,7 +2232,7 @@ namespace com.GraphDefined.Asavie.API
                                                                                              (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
@@ -2451,7 +2448,7 @@ namespace com.GraphDefined.Asavie.API
                                                                                              (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
@@ -2663,7 +2660,7 @@ namespace com.GraphDefined.Asavie.API
                                                                                              "/analytics/clientsessions" + Filter.Replace(" ", "%20")), //?from=01jul2016%2000:00&to=11jul2018%2000:00"),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
@@ -2877,7 +2874,7 @@ namespace com.GraphDefined.Asavie.API
                                                Execute(client => client.GET(HTTPURI.Parse("/v1/accounts/" + AccountName + "/logs"),
 
                                                                             requestbuilder => {
-                                                                                requestbuilder.Host           = HTTPHostname.Parse(VirtualHostname);
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
                                                                                 requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
                                                                                 requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                 requestbuilder.UserAgent      = UserAgent;
