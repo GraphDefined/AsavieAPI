@@ -36,7 +36,9 @@ namespace com.GraphDefined.Asavie.API
 
         #region Data
 
-        private readonly String InternalId;
+        private static readonly Random  _random = new Random(DateTime.Now.Millisecond);
+
+        private        readonly String  InternalId;
 
         #endregion
 
@@ -63,6 +65,18 @@ namespace com.GraphDefined.Asavie.API
 
         #endregion
 
+
+        #region (static) Random(Length)
+
+        /// <summary>
+        /// Create a new SIM identification.
+        /// </summary>
+        /// <param name="Length">The expected length of the SIM identification.</param>
+        public static SIM_Id Random(Byte Length = 10)
+
+            => new SIM_Id(_random.RandomString(Length).ToUpper());
+
+        #endregion
 
         #region (static) Parse   (Text)
 
