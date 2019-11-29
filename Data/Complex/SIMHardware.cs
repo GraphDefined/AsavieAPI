@@ -43,7 +43,7 @@ namespace com.GraphDefined.Asavie.API
         public String         Description           { get; }
         public String         InventoryRef          { get; }
         public SimCardStates  State                 { get; }
-        public Byte?          Version               { get; }
+        public UInt64?        Version               { get; }
         public Byte?          ActorStatus           { get; }
         public String         ForeignAttributes     { get; }
         public String         Tariff                { get; }
@@ -69,7 +69,7 @@ namespace com.GraphDefined.Asavie.API
                            String         Description,
                            String         InventoryRef,
                            SimCardStates  State,
-                           Byte?          Version,
+                           UInt64?        Version,
                            Byte?          ActorStatus,
                            String         ForeignAttributes,
                            String         Tariff,
@@ -171,7 +171,7 @@ namespace com.GraphDefined.Asavie.API
                                                JSON["Description"]?.          Value<String>(),
                                                JSON["InventoryRef"]?.         Value<String>(),
                                                JSON["State"]    != null ? (SimCardStates) Enum.Parse(typeof(SimCardStates), JSON["State"].Value<String>(), true) : SimCardStates.unknown,
-                                               JSON["Version"]?.              Value<Byte>(),
+                                               JSON["Version"]?.              Value<UInt64>(),
                                                JSON["ActorStatus"]?.          Value<Byte>(),
                                                JSON["ForeignAttributes"]?.    Value<String>(),
                                                JSON["Tariff"]?.               Value<String>(),
@@ -195,8 +195,10 @@ namespace com.GraphDefined.Asavie.API
                 return true;
 
             }
-            catch (Exception)
-            { }
+            catch (Exception e)
+            {
+
+            }
 
             SIMHardware = null;
             return false;
