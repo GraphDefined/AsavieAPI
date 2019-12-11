@@ -833,6 +833,174 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
+        #region GetSIMHardwareRAW  (AccountName, ...)
+
+        public async Task<JObject>
+
+            GetSIMHardwareRAW(Account_Id          AccountName,
+                              Boolean             Refresh             = false,
+
+                              DateTime?           Timestamp           = null,
+                              CancellationToken?  CancellationToken   = null,
+                              EventTracking_Id    EventTrackingId     = null,
+                              TimeSpan?           RequestTimeout      = null)
+
+        {
+
+            Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
+            String ErrorResponse = null;
+
+            try
+            {
+
+                #region Check access token...
+
+                if (CurrentAccessToken.Token == null ||
+                    CurrentAccessToken.RefreshAfter < DateTime.UtcNow)
+                {
+                    CurrentAccessToken = await NewAuthToken();
+                }
+
+                HTTPResponse httpresponse = null;
+
+                var retry = 0;
+
+                #endregion
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    try
+                    {
+
+                        httpresponse = await new HTTPSClient(Hostname,
+                                                             RemoteCertificateValidator,
+                                                             RemotePort:  RemotePort,
+                                                             DNSClient:   DNSClient ?? this.DNSClient).
+
+                                                 Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName + "/hardware/sims" + (Refresh ? "?refresh=true" : "")),
+
+                                                                              requestbuilder => {
+                                                                                  requestbuilder.Host          = VirtualHostname ?? Hostname;
+                                                                                  requestbuilder.Authorization = new HTTPBearerAuthentication(CurrentAccessToken.Token);
+                                                                                  requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                  requestbuilder.UserAgent      = UserAgent;
+                                                                              }),
+
+                                                         //RequestLogDelegate:  OnRemoteStartRequest,
+                                                         //ResponseLogDelegate: OnRemoteStartResponse,
+                                                         CancellationToken:     CancellationToken,
+                                                         EventTrackingId:       EventTrackingId,
+                                                         RequestTimeout:        RequestTimeout ?? TimeSpan.FromSeconds(60)).
+
+                                                 ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorResponse = "Querying Asavie SIM hardware information failed: " + e.Message;
+                    }
+
+                    #endregion
+
+
+                    #region HTTPStatusCode.OK
+
+                    if (httpresponse?.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        // HTTP/1.1 200 OK
+                        // Cache-Control:    no-cache
+                        // Pragma:           no-cache
+                        // Content-Length:   658
+                        // Content-Type:     application/json;charset=UTF-8
+                        // Expires:          -1
+                        // Request-Context:  appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                        // Date:             Mon, 16 Jul 2018 21:10:29 GMT
+                        // 
+                        // {
+                        //   "Data":               [{ ... }, { ... }],
+                        //   "Success":            true,
+                        //   "Code":               200,
+                        //   "ErrorCode":          0,
+                        //   "ErrorSubCode":       0,
+                        //   "ErrorDescription":   "",
+                        //   "Meta":               "",
+                        //   "StatusUrl":          null,
+                        //   "ContinuationToken":  ""
+                        // }
+
+                        try
+                        {
+
+                            if (httpresponse.TryParseJObjectResponseBody(out JObject JSONObj))
+                                return JSONObj;
+
+                        }
+                        catch (Exception e)
+                        {
+
+                            return new JObject(
+                                       new JProperty("exception",   e.Message),
+                                       new JProperty("stackTrace",  e.StackTrace)
+                                   );
+
+                        }
+
+                    }
+
+                    #endregion
+
+                    #region HTTPStatusCode.Unauthorized
+
+                    // HTTP/1.1 401 Unauthorized
+                    // Cache-Control: no-cache
+                    // Pragma: no-cache
+                    // Content-Length: 61
+                    // Content-Type: application/json; charset=utf-8
+                    // Expires: -1
+                    // WWW-Authenticate: Bearer
+                    // Request-Context: appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                    // Date: Fri, 28 Sep 2018 01:41:50 GMT
+                    // 
+                    // {"Message":"Authorization has been denied for this request."}
+
+                    if (httpresponse?.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+                        CurrentAccessToken = await NewAuthToken();
+                    }
+
+                    #endregion
+
+                    retry++;
+
+                } while (retry < 5);
+
+                if (ErrorResponse != null)
+                    ErrorResponse = httpresponse?.HTTPStatusCode.ToString();
+
+            }
+            catch (Exception e)
+            {
+
+                return new JObject(
+                       new JProperty("message", "Querying Asavie SIM hardware information failed!"),
+                       new JProperty("exception", e.Message),
+                       new JProperty("stackTrace", e.StackTrace)
+                   );
+
+            }
+
+            return new JObject(
+                       new JProperty("message", "Querying Asavie SIM hardware information failed!")
+                   );
+
+        }
+
+        #endregion
+
         #region GetSIMHardware     (AccountName, ...)
 
         public async Task<APIResult<IEnumerable<SIMHardware>>>
@@ -1689,6 +1857,178 @@ namespace com.GraphDefined.Asavie.API
         #endregion
 
 
+        #region GetAPNDevicesRAW   (AccountName, NetworkName, ...)
+
+        public async Task<JObject>
+
+            GetAPNDevicesRAW(Account_Id          AccountName,
+                             Network_Id          NetworkName,
+                             Boolean             Refresh             = false,
+
+                             DateTime?           Timestamp           = null,
+                             CancellationToken?  CancellationToken   = null,
+                             EventTracking_Id    EventTrackingId     = null,
+                             TimeSpan?           RequestTimeout      = null)
+
+        {
+
+            Thread.CurrentThread.Priority  = ThreadPriority.BelowNormal;
+            String ErrorResponse           = null;
+
+            try
+            {
+
+                #region Check access token...
+
+                if (CurrentAccessToken.Token == null ||
+                    CurrentAccessToken.RefreshAfter < DateTime.UtcNow)
+                {
+                    CurrentAccessToken = await NewAuthToken();
+                }
+
+                HTTPResponse httpresponse = null;
+
+                var retry = 0;
+
+                #endregion
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    try
+                    {
+
+                        httpresponse = await new HTTPSClient(Hostname,
+                                                             RemoteCertificateValidator,
+                                                             RemotePort:  RemotePort,
+                                                             DNSClient:   DNSClient ?? this.DNSClient).
+
+                                               Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
+                                                                                              "/networks/" + NetworkName +
+                                                                                              "/devices/apns" +
+                                                                                              (Refresh ? "?refresh=true" : "")),
+
+                                                                            requestbuilder => {
+                                                                                requestbuilder.Host           = VirtualHostname ?? Hostname;
+                                                                                requestbuilder.Authorization  = new HTTPBearerAuthentication(CurrentAccessToken.Token);
+                                                                                requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                requestbuilder.UserAgent      = UserAgent;
+                                                                            }),
+
+                                                       //RequestLogDelegate:   OnRemoteStartRequest,
+                                                       //ResponseLogDelegate:  OnRemoteStartResponse,
+                                                       CancellationToken:    CancellationToken,
+                                                       EventTrackingId:      EventTrackingId,
+                                                       RequestTimeout:       RequestTimeout ?? TimeSpan.FromSeconds(60)).
+
+                                               ConfigureAwait(false);
+
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorResponse = "Querying Asavie APN device information failed: " + e.Message;
+                    }
+
+                    #endregion
+
+
+                    #region HTTPStatusCode.OK
+
+                    if (httpresponse?.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        // HTTP/1.1 200 OK
+                        // Cache-Control:    no-cache
+                        // Pragma:           no-cache
+                        // Content-Length:   658
+                        // Content-Type:     application/json;charset=UTF-8
+                        // Expires:          -1
+                        // Request-Context:  appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                        // Date:             Mon, 16 Jul 2018 21:10:29 GMT
+                        // 
+                        // {
+                        //   "Data":               [{ ... }, { ... }],
+                        //   "Success":            true,
+                        //   "Code":               200,
+                        //   "ErrorCode":          0,
+                        //   "ErrorSubCode":       0,
+                        //   "ErrorDescription":   "",
+                        //   "Meta":               "",
+                        //   "StatusUrl":          null,
+                        //   "ContinuationToken":  ""
+                        // }
+
+                        try
+                        {
+
+                            if (httpresponse.TryParseJObjectResponseBody(out JObject JSONObj))
+                                return JSONObj;
+
+                        }
+                        catch (Exception e)
+                        {
+
+                            return new JObject(
+                                       new JProperty("exception",   e.Message),
+                                       new JProperty("stackTrace",  e.StackTrace)
+                                   );
+
+                        }
+
+                    }
+
+                    #endregion
+
+                    #region HTTPStatusCode.Unauthorized
+
+                    // HTTP/1.1 401 Unauthorized
+                    // Cache-Control: no-cache
+                    // Pragma: no-cache
+                    // Content-Length: 61
+                    // Content-Type: application/json; charset=utf-8
+                    // Expires: -1
+                    // WWW-Authenticate: Bearer
+                    // Request-Context: appId=cid-v1:975a755f-8eba-463d-9561-4f15833798f3
+                    // Date: Fri, 28 Sep 2018 01:41:50 GMT
+                    // 
+                    // {"Message":"Authorization has been denied for this request."}
+
+                    if (httpresponse?.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+                        CurrentAccessToken = await NewAuthToken();
+                    }
+
+                    #endregion
+
+                    retry++;
+
+                } while (retry < 5);
+
+                if (ErrorResponse != null)
+                    ErrorResponse = httpresponse?.HTTPStatusCode.ToString();
+
+            }
+            catch (Exception e)
+            {
+
+                return new JObject(
+                       new JProperty("message",     "Querying Asavie APN devices information failed!"),
+                       new JProperty("exception",   e.Message),
+                       new JProperty("stackTrace",  e.StackTrace)
+                   );
+
+            }
+
+            return new JObject(
+                       new JProperty("message",     "Querying Asavie APN devices information failed!")
+                   );
+
+        }
+
+        #endregion
+
         #region GetAPNDevices      (AccountName, NetworkName, ...)
 
         public async Task<APIResult<IEnumerable<APNDevice>>>
@@ -1738,9 +2078,9 @@ namespace com.GraphDefined.Asavie.API
                                                              DNSClient:   DNSClient ?? this.DNSClient).
 
                                                Execute(client => client.GET(HTTPPath.Parse("/v1/accounts/" + AccountName +
-                                                                                             "/networks/" + NetworkName +
-                                                                                             "/devices/apns" +
-                                                                                             (Refresh ? "?refresh=true" : "")),
+                                                                                              "/networks/" + NetworkName +
+                                                                                              "/devices/apns" +
+                                                                                              (Refresh ? "?refresh=true" : "")),
 
                                                                             requestbuilder => {
                                                                                 requestbuilder.Host           = VirtualHostname ?? Hostname;
