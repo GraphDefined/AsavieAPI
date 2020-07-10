@@ -266,18 +266,18 @@ namespace com.GraphDefined.Asavie.API
                         if (httpresponse.TryParseJObjectResponseBody(out JObject JSONObj))
                         {
 
-                            if (!JSONObj.ParseMandatory("access_token",
-                                                        "access token",
-                                                        out String Token,
-                                                        out String ErrorResponse))
+                            if (!JSONObj.ParseMandatoryText("access_token",
+                                                            "access token",
+                                                            out String  Token,
+                                                            out String  ErrorResponse))
                             {
                                 throw new Exception(ErrorResponse);
                             }
 
                             if (!JSONObj.ParseMandatory(".expires",
                                                         "expires timestamp",
-                                                        out DateTime Expires,
-                                                        out          ErrorResponse))
+                                                        out DateTime  Expires,
+                                                        out           ErrorResponse))
                             {
                                 throw new Exception(ErrorResponse);
                             }

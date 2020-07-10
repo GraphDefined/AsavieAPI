@@ -179,8 +179,8 @@ namespace com.GraphDefined.Asavie.API
 
                     if (!JSONObj.ParseMandatory("Success",
                                                 "Success",
-                                                out Boolean Success,
-                                                out String  ErrorResponse))
+                                                out Boolean  Success,
+                                                out String   ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
@@ -188,8 +188,8 @@ namespace com.GraphDefined.Asavie.API
                     if (!JSONObj.ParseMandatory("Code",
                                                 "Code",
                                                 UInt16.TryParse,
-                                                out UInt16 Code,
-                                                out        ErrorResponse))
+                                                out UInt16  Code,
+                                                out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
@@ -197,8 +197,8 @@ namespace com.GraphDefined.Asavie.API
                     if (!JSONObj.ParseMandatory("ErrorCode",
                                                 "error code",
                                                 UInt16.TryParse,
-                                                out UInt16 ErrorCode,
-                                                out ErrorResponse))
+                                                out UInt16  ErrorCode,
+                                                out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
@@ -206,40 +206,40 @@ namespace com.GraphDefined.Asavie.API
                     if (!JSONObj.ParseMandatory("ErrorSubCode",
                                                 "error subcode",
                                                 UInt16.TryParse,
-                                                out UInt16 ErrorSubCode,
-                                                out ErrorResponse))
+                                                out UInt16  ErrorSubCode,
+                                                out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
 
-                    if (!JSONObj.ParseMandatory("ErrorDescription",
-                                                "error description",
-                                                out String ErrorDescription,
-                                                out ErrorResponse))
+                    if (!JSONObj.ParseMandatoryText("ErrorDescription",
+                                                    "error description",
+                                                    out String  ErrorDescription,
+                                                    out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
 
-                    if (!JSONObj.ParseMandatory("Meta",
-                                                "meta",
-                                                out String Meta,
-                                                out ErrorResponse))
+                    if (!JSONObj.ParseMandatoryText("Meta",
+                                                    "meta",
+                                                    out String  Meta,
+                                                    out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
 
-                    if (!JSONObj.ParseMandatory("StatusUrl",
-                                                "status url",
-                                                out String StatusURL,
-                                                out        ErrorResponse))
+                    if (!JSONObj.ParseMandatoryText("StatusUrl",
+                                                    "status url",
+                                                    out String  StatusURL,
+                                                    out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
 
-                    if (!JSONObj.ParseMandatory("ContinuationToken",
-                                                "continuation token",
-                                                out String ContinuationToken,
-                                                out ErrorResponse))
+                    if (!JSONObj.ParseMandatoryText("ContinuationToken",
+                                                    "continuation token",
+                                                    out String  ContinuationToken,
+                                                    out         ErrorResponse))
                     {
                         throw new Exception(ErrorResponse);
                     }
