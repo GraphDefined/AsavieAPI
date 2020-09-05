@@ -29,16 +29,17 @@ namespace com.GraphDefined.Asavie.API
     /// <summary>
     /// The unique identification of a SIM.
     /// </summary>
-    public struct SIM_Id : IId,
-                           IEquatable<SIM_Id>,
-                           IComparable<SIM_Id>
+    public readonly struct SIM_Id : IId<SIM_Id>
     {
 
         #region Data
 
-        private static readonly Random  _random = new Random(DateTime.Now.Millisecond);
+        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
 
-        private        readonly String  InternalId;
+        /// <summary>
+        /// The internal identification.
+        /// </summary>
+        private readonly String InternalId;
 
         #endregion
 
@@ -48,25 +49,27 @@ namespace com.GraphDefined.Asavie.API
         /// Indicates whether this identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
+
             => InternalId.IsNullOrEmpty();
 
         /// <summary>
-        /// The length of the SIM identification.
+        /// The length of the SIM card identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId?.Length;
+
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new SIM identification based on the given string.
+        /// Create a new SIM card identification based on the given string.
         /// </summary>
-        /// <param name="String">The string representation of the SIM identification.</param>
+        /// <param name="String">The string representation of the SIM card identification.</param>
         private SIM_Id(String String)
         {
-            InternalId = String;
+            this.InternalId  = String;
         }
 
         #endregion
@@ -87,23 +90,19 @@ namespace com.GraphDefined.Asavie.API
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given string as a SIM identification.
+        /// Parse the given string as a SIM card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a SIM identification.</param>
+        /// <param name="Text">A text representation of a SIM card identification.</param>
         public static SIM_Id Parse(String Text)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
+            if (TryParse(Text, out SIM_Id SIMId))
+                return SIMId;
 
             if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a SIM identification must not be null or empty!");
+                throw new ArgumentNullException(nameof(Text), "The given text representation of a SIM card identification must not be null or empty!");
 
-            #endregion
-
-            return new SIM_Id(Text);
+            throw new ArgumentException("The given text representation of a SIM card identification is invalid!", nameof(Text));
 
         }
 
@@ -112,51 +111,44 @@ namespace com.GraphDefined.Asavie.API
         #region (static) TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given string as a SIM identification.
+        /// Try to parse the given string as a SIM card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a SIM identification.</param>
+        /// <param name="Text">A text representation of a SIM card identification.</param>
         public static SIM_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out SIM_Id _SIMId))
-                return _SIMId;
+            if (TryParse(Text, out SIM_Id SIMId))
+                return SIMId;
 
-            return new SIM_Id?();
+            return null;
 
         }
 
         #endregion
 
-        #region (static) TryParse(Text, out SIMId)
+        #region (static) TryParse(Text, out CommunicatorId)
 
         /// <summary>
-        /// Try to parse the given string as a SIM identification.
+        /// Try to parse the given string as a SIM card identification.
         /// </summary>
-        /// <param name="Text">A text representation of a SIM identification.</param>
-        /// <param name="SIMId">The parsed SIM identification.</param>
-        public static Boolean TryParse(String Text, out SIM_Id SIMId)
+        /// <param name="Text">A text representation of a SIM card identification.</param>
+        /// <param name="CommunicatorId">The parsed SIM card identification.</param>
+        public static Boolean TryParse(String Text, out SIM_Id CommunicatorId)
         {
 
-            #region Initial checks
-
-            if (Text != null)
-                Text = Text.Trim();
-
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a SIM identification must not be null or empty!");
-
-            #endregion
-
-            try
+            if (Text.IsNotNullOrEmpty())
             {
-                SIMId = new SIM_Id(Text);
-                return true;
+                try
+                {
+                    CommunicatorId = new SIM_Id(Text.Trim());
+                    return true;
+                }
+                catch (Exception)
+                { }
             }
-            catch (Exception)
-            {
-                SIMId = default;
-                return false;
-            }
+
+            CommunicatorId = default;
+            return false;
 
         }
 
@@ -165,100 +157,112 @@ namespace com.GraphDefined.Asavie.API
         #region Clone
 
         /// <summary>
-        /// Clone a SIM identification.
+        /// Clone this SIM card identification.
         /// </summary>
         public SIM_Id Clone
 
-            => new SIM_Id(InternalId != null
-                              ? new String(InternalId.ToCharArray())
-                              : null);
+            => new SIM_Id(
+                   new String(InternalId?.ToCharArray())
+               );
 
         #endregion
 
 
         #region Operator overloading
 
-        #region Operator == (SIMId1, SIMId2)
+        #region Operator == (CommunicatorId1, CommunicatorId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId1">A SIM identification.</param>
-        /// <param name="SIMId2">Another SIM identification.</param>
+        /// <param name="CommunicatorId1">A SIM card identification.</param>
+        /// <param name="CommunicatorId2">Another SIM card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (SIM_Id SIMId1, SIM_Id SIMId2)
-            => SIMId1.Equals(SIMId2);
+        public static Boolean operator == (SIM_Id CommunicatorId1,
+                                           SIM_Id CommunicatorId2)
+
+            => CommunicatorId1.Equals(CommunicatorId2);
 
         #endregion
 
-        #region Operator != (SIMId1, SIMId2)
+        #region Operator != (CommunicatorId1, CommunicatorId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId1">A SIM identification.</param>
-        /// <param name="SIMId2">Another SIM identification.</param>
+        /// <param name="CommunicatorId1">A SIM card identification.</param>
+        /// <param name="CommunicatorId2">Another SIM card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (SIM_Id SIMId1, SIM_Id SIMId2)
-            => !(SIMId1 == SIMId2);
+        public static Boolean operator != (SIM_Id CommunicatorId1,
+                                           SIM_Id CommunicatorId2)
+
+            => !(CommunicatorId1 == CommunicatorId2);
 
         #endregion
 
-        #region Operator <  (SIMId1, SIMId2)
+        #region Operator <  (CommunicatorId1, CommunicatorId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId1">A SIM identification.</param>
-        /// <param name="SIMId2">Another SIM identification.</param>
+        /// <param name="CommunicatorId1">A SIM card identification.</param>
+        /// <param name="CommunicatorId2">Another SIM card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (SIM_Id SIMId1, SIM_Id SIMId2)
-            => SIMId1.CompareTo(SIMId2) < 0;
+        public static Boolean operator < (SIM_Id CommunicatorId1,
+                                          SIM_Id CommunicatorId2)
+
+            => CommunicatorId1.CompareTo(CommunicatorId2) < 0;
 
         #endregion
 
-        #region Operator <= (SIMId1, SIMId2)
+        #region Operator <= (CommunicatorId1, CommunicatorId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId1">A SIM identification.</param>
-        /// <param name="SIMId2">Another SIM identification.</param>
+        /// <param name="CommunicatorId1">A SIM card identification.</param>
+        /// <param name="CommunicatorId2">Another SIM card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (SIM_Id SIMId1, SIM_Id SIMId2)
-            => !(SIMId1 > SIMId2);
+        public static Boolean operator <= (SIM_Id CommunicatorId1,
+                                           SIM_Id CommunicatorId2)
+
+            => !(CommunicatorId1 > CommunicatorId2);
 
         #endregion
 
-        #region Operator >  (SIMId1, SIMId2)
+        #region Operator >  (CommunicatorId1, CommunicatorId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId1">A SIM identification.</param>
-        /// <param name="SIMId2">Another SIM identification.</param>
+        /// <param name="CommunicatorId1">A SIM card identification.</param>
+        /// <param name="CommunicatorId2">Another SIM card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (SIM_Id SIMId1, SIM_Id SIMId2)
-            => SIMId1.CompareTo(SIMId2) > 0;
+        public static Boolean operator > (SIM_Id CommunicatorId1,
+                                          SIM_Id CommunicatorId2)
+
+            => CommunicatorId1.CompareTo(CommunicatorId2) > 0;
 
         #endregion
 
-        #region Operator >= (SIMId1, SIMId2)
+        #region Operator >= (CommunicatorId1, CommunicatorId2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId1">A SIM identification.</param>
-        /// <param name="SIMId2">Another SIM identification.</param>
+        /// <param name="CommunicatorId1">A SIM card identification.</param>
+        /// <param name="CommunicatorId2">Another SIM card identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (SIM_Id SIMId1, SIM_Id SIMId2)
-            => !(SIMId1 < SIMId2);
+        public static Boolean operator >= (SIM_Id CommunicatorId1,
+                                           SIM_Id CommunicatorId2)
+
+            => !(CommunicatorId1 < CommunicatorId2);
 
         #endregion
 
         #endregion
 
-        #region IComparable<SIMId> Members
+        #region IComparable<CommunicatorId> Members
 
         #region CompareTo(Object)
 
@@ -269,43 +273,33 @@ namespace com.GraphDefined.Asavie.API
         public Int32 CompareTo(Object Object)
         {
 
-            if (Object == null)
-                throw new ArgumentNullException(nameof(Object), "The given object must not be null!");
+            if (Object is SIM_Id SIMId)
+                return CompareTo(SIMId);
 
-            if (!(Object is SIM_Id SIMId))
-                throw new ArgumentException("The given object is not a SIM identification!",
-                                            nameof(Object));
-
-            return CompareTo(SIMId);
+            throw new ArgumentException("The given object is not a SIM card identification!",
+                                        nameof(Object));
 
         }
 
         #endregion
 
-        #region CompareTo(SIMId)
+        #region CompareTo(CommunicatorId)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="SIMId">An object to compare with.</param>
-        public Int32 CompareTo(SIM_Id SIMId)
-        {
+        /// <param name="CommunicatorId">An object to compare with.</param>
+        public Int32 CompareTo(SIM_Id CommunicatorId)
 
-            if ((Object) SIMId == null)
-                throw new ArgumentNullException(nameof(SIMId),  "The given SIM identification must not be null!");
-
-            if (InternalId == null && SIMId.InternalId == null)
-                return 0;
-
-            return String.Compare(InternalId, SIMId.InternalId, StringComparison.Ordinal);
-
-        }
+            => String.Compare(InternalId,
+                              CommunicatorId.InternalId,
+                              StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
         #endregion
 
-        #region IEquatable<SIMId> Members
+        #region IEquatable<CommunicatorId> Members
 
         #region Equals(Object)
 
@@ -317,41 +311,27 @@ namespace com.GraphDefined.Asavie.API
         public override Boolean Equals(Object Object)
         {
 
-            if (Object == null)
-                return false;
+            if (Object is SIM_Id SIMId)
+                return Equals(SIMId);
 
-            if (!(Object is SIM_Id SIMId))
-                return false;
-
-            return Equals(SIMId);
+            return false;
 
         }
 
         #endregion
 
-        #region Equals(SIMId)
+        #region Equals(CommunicatorId)
 
         /// <summary>
-        /// Compares two SIM identifications for equality.
+        /// Compares two SIM card identifications for equality.
         /// </summary>
-        /// <param name="SIMId">An SIM identification to compare with.</param>
+        /// <param name="CommunicatorId">An SIM card identification to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(SIM_Id SIMId)
-        {
+        public Boolean Equals(SIM_Id CommunicatorId)
 
-            if (InternalId == null)
-            {
-
-                if (SIMId.InternalId == null)
-                    return true;
-
-                return false;
-
-            }
-
-            return InternalId.Equals(SIMId.InternalId);
-
-        }
+            => String.Equals(InternalId,
+                             CommunicatorId.InternalId,
+                             StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -365,9 +345,7 @@ namespace com.GraphDefined.Asavie.API
         /// <returns>The HashCode of this object.</returns>
         public override Int32 GetHashCode()
 
-            => InternalId != null
-                   ? InternalId.GetHashCode()
-                   : 0;
+            => InternalId?.ToLower().GetHashCode() ?? 0;
 
         #endregion
 
@@ -377,7 +355,8 @@ namespace com.GraphDefined.Asavie.API
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-            => InternalId ?? "<null>";
+
+            => InternalId ?? "";
 
         #endregion
 
